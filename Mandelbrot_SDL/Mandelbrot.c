@@ -12,7 +12,8 @@
 
 void *thread_mandelbrot(void *arg)
 {
-   Pile *p = (Pile*) arg;
+/*   args_t *a = arg;  //struct
+   
    bloc_t *b;
    unsigned int left;
    //lock stack
@@ -25,8 +26,10 @@ void *thread_mandelbrot(void *arg)
          //unlock stack
          break;
       }
+      b = pop(p);
+      //unlock stack
       
    }
-   
+   */
    return NULL;
 }

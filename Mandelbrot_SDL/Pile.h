@@ -8,8 +8,16 @@
 
 #ifndef Mandelbrot_SDL_Pile_h
 #define Mandelbrot_SDL_Pile_h
+#include "Mandelbrot.h"
 
-int nb_elements(
-bloc_M_t* pop (*pile);
-void push (*pile), *bloc_M_t);
+typedef struct Pile Pile;
+
+struct Pile{
+   int nb_elements;
+   bloc_t * bloc;
+};
+
+void pop(Pile* p, bloc_t** bloc);
+void push(Pile* p, bloc_t** bloc);
+int is_stack_empty(Pile* p);
 #endif

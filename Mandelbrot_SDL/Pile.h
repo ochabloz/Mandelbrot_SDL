@@ -11,13 +11,21 @@
 #include "Mandelbrot.h"
 
 typedef struct Pile Pile;
+typedef struct Pile_elem Pile_elem;
 
 struct Pile{
    int nb_elements;
-   bloc_t * bloc;
+   Pile_elem * suivant;
 };
 
-void pop(Pile* p, bloc_t** bloc);
-void push(Pile* p, bloc_t** bloc);
+
+
+struct Pile_elem{
+   void* element;
+   Pile_elem * suivant;
+};
+
+void pop_stack(Pile* p, void** bloc);
+void push_stack(Pile* p, void* bloc);
 int is_stack_empty(Pile* p);
 #endif

@@ -14,6 +14,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
+#define DEPTH 32
+
 // Macros to pack and unpack color components.
 #define COLOR(r,g,b) ((uint32)b | ((uint32)g<<8) | ((uint32)r<<16))
 #define COLOR_GET_B(col) (col & 0xFF)

@@ -8,7 +8,7 @@
 
 #include "gfx.h"
 
-static int DEPTH = 32;
+
 
 /**
  * Compute pixel address for coordinates (x,y).

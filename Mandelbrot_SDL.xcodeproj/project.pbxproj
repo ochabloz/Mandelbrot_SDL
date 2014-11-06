@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		090E1C001A0BB20200CAFB44 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 090E1BFF1A0BB20200CAFB44 /* main.c */; };
 		096A22981A0BB45800387E02 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096A22971A0BB45800387E02 /* SDL2.framework */; };
-		096A229B1A0BB48100387E02 /* gfx.c in Sources */ = {isa = PBXBuildFile; fileRef = 096A22991A0BB48100387E02 /* gfx.c */; };
+		096A22A11A0BB58200387E02 /* gfx.c in Sources */ = {isa = PBXBuildFile; fileRef = 096A229F1A0BB58200387E02 /* gfx.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,8 +28,8 @@
 		090E1BFC1A0BB20200CAFB44 /* Mandelbrot_SDL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Mandelbrot_SDL; sourceTree = BUILT_PRODUCTS_DIR; };
 		090E1BFF1A0BB20200CAFB44 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		096A22971A0BB45800387E02 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
-		096A22991A0BB48100387E02 /* gfx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = gfx.c; path = ../../../MandelBrot_SDL/gfx.c; sourceTree = "<group>"; };
-		096A229A1A0BB48100387E02 /* gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gfx.h; path = ../../../MandelBrot_SDL/gfx.h; sourceTree = "<group>"; };
+		096A229F1A0BB58200387E02 /* gfx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gfx.c; sourceTree = "<group>"; };
+		096A22A01A0BB58200387E02 /* gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,9 +64,9 @@
 		090E1BFE1A0BB20200CAFB44 /* Mandelbrot_SDL */ = {
 			isa = PBXGroup;
 			children = (
-				096A22991A0BB48100387E02 /* gfx.c */,
-				096A229A1A0BB48100387E02 /* gfx.h */,
 				090E1BFF1A0BB20200CAFB44 /* main.c */,
+				096A229F1A0BB58200387E02 /* gfx.c */,
+				096A22A01A0BB58200387E02 /* gfx.h */,
 			);
 			path = Mandelbrot_SDL;
 			sourceTree = "<group>";
@@ -128,7 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				090E1C001A0BB20200CAFB44 /* main.c in Sources */,
-				096A229B1A0BB48100387E02 /* gfx.c in Sources */,
+				096A22A11A0BB58200387E02 /* gfx.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

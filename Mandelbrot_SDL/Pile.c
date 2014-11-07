@@ -34,7 +34,7 @@ void pop_stack(Pile* p, void** bloc){
 }
 
 int is_stack_empty(Pile* p){
-   return p->nb_elements > 0;
+   return p->nb_elements <= 0;
 }
 
 void create_stack_from_surface(SURFACE * s, Pile ** stack, Uint32 nb_blocs){

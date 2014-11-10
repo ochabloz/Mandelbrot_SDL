@@ -8,7 +8,7 @@
 
 #ifndef Mandelbrot_SDL_Mandelbrot_h
 #define Mandelbrot_SDL_Mandelbrot_h
-#include "Pile.h"
+#include "stack.h"
 #include "gfx.h"
 
 

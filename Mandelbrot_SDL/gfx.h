@@ -47,4 +47,6 @@ extern void gfx_present(SURFACE *surface);
 extern bool gfx_is_esc_pressed();
 extern void gfx_close();
 
+// Threaded functions
+void * thread_render_present(void * surface);
 #endif

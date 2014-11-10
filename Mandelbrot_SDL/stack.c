@@ -1,15 +1,16 @@
 //
-//  Pile.c
+//  stack.c
 //  Mandelbrot_SDL
 //
-//  Created by Olivier on 06.11.14.
+//  Created by Olivier on 10.11.14.
 //  Copyright (c) 2014 Olivier. All rights reserved.
 //
+
+#include "stack.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "Mandelbrot.h"
-#include "Pile.h"
 #include "gfx.h"
 
 void push_stack(Pile_t* p, void* bloc){
@@ -37,12 +38,40 @@ void pop_stack(Pile_t* p, void** bloc){
 int is_stack_empty(Pile_t* p){
    return p->nb_elements <= 0;
 }
+void create_stack(Pile_t** stack){
+   *stack = malloc(sizeof(Pile_t));
+}
+
+void lock_stack(Pile_t* p){
+#ifdef __APPLE__
+   OSSpinLockLock(&(p->lock));
+#else
+   pthread_spin_lock(&(p->lock));
+#endif
+}
+void unlock_stack(Pile_t* p){
+#ifdef __APPLE__
+   OSSpinLockUnlock(&(p->lock));
+#else
+   pthread_spin_unlock(&(p->lock));
+#endif
+}
+
+void free_stack(Pile_t** stack){
+   void * to_trash;
+   while (!is_stack_empty(*stack)){
+      pop_stack(*stack, to_trash);
+      free(to_trash);
+   }
+   free(*stack);
+   *stack = NULL;
+}
 
 void create_stack_from_surface(SURFACE * s, Pile_t** stack, Uint32 nb_blocs){
    int width, height;
    Uint32 range, sum = 0, nb_pixel;
    bloc_t *bloc_temp = NULL;
-   *stack = malloc(sizeof(Pile_t));
+   create_stack(stack);
    
    SDL_GetWindowSize(s->window, &width, &height);
    nb_pixel = width * height;

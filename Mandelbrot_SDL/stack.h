@@ -37,6 +37,7 @@ void push_stack(Pile_t* p, void* bloc);
 void lock_stack(Pile_t* p);
 void unlock_stack(Pile_t* p);
 int is_stack_empty(Pile_t* p);
+void free_stack(Pile_t** stack);
 void create_stack(Pile_t ** stack);
 void create_stack_from_surface(SURFACE * s, Pile_t ** stack, Uint32 nb_blocs);
 

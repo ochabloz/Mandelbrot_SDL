@@ -57,6 +57,16 @@ void unlock_stack(Pile_t* p){
 #endif
 }
 
+void free_stack(Pile_t** stack){
+   void * to_trash;
+   while (!is_stack_empty(*stack)){
+      pop_stack(*stack, to_trash);
+      free(to_trash);
+   }
+   free(*stack);
+   *stack = NULL;
+}
+
 void create_stack_from_surface(SURFACE * s, Pile_t** stack, Uint32 nb_blocs){
    int width, height;
    Uint32 range, sum = 0, nb_pixel;

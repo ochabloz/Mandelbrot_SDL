@@ -161,9 +161,10 @@ bool gfx_is_esc_pressed() {
  */
 void gfx_present(SURFACE *surface) {
    int pos = 0;
-   while (surface->string[pos] != '\0')
+   while (surface->string[pos] != '\0'){
       write_char_to_pos(surface->string[pos], pos, surface);
-   
+      pos++;
+   }
    SDL_Flip(surface->image);
 }
 

@@ -171,7 +171,7 @@ void *Thread_Master(void *param)
    info.s = s;
    info.d = arg->surface;
    info.c = &colormap;
-   
+   gfx_print("salut", arg->surface);   
    //allocating thread structure memory
    pthread_t *mandelbrot_t = (pthread_t*) malloc(sizeof(pthread_t)*arg->nthread);
    if(!mandelbrot_t) {

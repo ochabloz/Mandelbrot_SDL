@@ -1,13 +1,14 @@
 //
-//  Pile.h
+//  stack.h
 //  Mandelbrot_SDL
 //
-//  Created by Alexis Marquet on 06/11/14.
+//  Created by Olivier on 10.11.14.
 //  Copyright (c) 2014 Olivier. All rights reserved.
 //
 
-#ifndef Mandelbrot_SDL_Pile_h
-#define Mandelbrot_SDL_Pile_h
+#ifndef __Mandelbrot_SDL__stack__
+#define __Mandelbrot_SDL__stack__
+
 #include "gfx.h"
 #include <pthread.h>
 
@@ -33,4 +34,5 @@ int is_stack_empty(Pile_t* p);
 
 void create_stack_from_surface(SURFACE * s, Pile_t ** stack, Uint32 nb_blocs);
 
-#endif
+
+#endif /* defined(__Mandelbrot_SDL__stack__) */

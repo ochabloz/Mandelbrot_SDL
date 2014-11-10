@@ -1,15 +1,16 @@
 //
-//  Pile.c
+//  stack.c
 //  Mandelbrot_SDL
 //
-//  Created by Olivier on 06.11.14.
+//  Created by Olivier on 10.11.14.
 //  Copyright (c) 2014 Olivier. All rights reserved.
 //
+
+#include "stack.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "Mandelbrot.h"
-#include "Pile.h"
 #include "gfx.h"
 
 void push_stack(Pile_t* p, void* bloc){

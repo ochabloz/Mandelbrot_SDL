@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include "Mandelbrot.h"
-#include "Pile.h"
+#include "stack.h"
 
 void *thread_mandelbrot(void *arg)
 {

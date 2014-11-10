@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include "gfx.h"
 #include "Mandelbrot.h"
-#include "Pile.h"
+#include "stack.h"
 
 // Size of the window
 #define WIDTH 1280
@@ -61,6 +61,10 @@ int main(int argc, char **argv) {
     150,
     10 };
     */
+   
+   pthread_t * thread_refresh;
+   
+   //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
    
    mandelbrot(surface, &colmap, WIDTH, HEIGHT, &p);
    gfx_close();

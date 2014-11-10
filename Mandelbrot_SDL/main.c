@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include "gfx.h"
 #include "Mandelbrot.h"
+#include "Pile.h"
 
 // Size of the window
 #define WIDTH 1280

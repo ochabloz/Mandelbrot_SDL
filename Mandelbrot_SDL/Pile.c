@@ -8,10 +8,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "Mandelbrot.h"
 #include "Pile.h"
 #include "gfx.h"
 
-void push_stack(Pile* p, void* bloc){
+void push_stack(Pile_t* p, void* bloc){
    Pile_elem * new_item = malloc(sizeof(Pile_elem));
    new_item->element = bloc;
    new_item->suivant = p->suivant;
@@ -19,7 +20,7 @@ void push_stack(Pile* p, void* bloc){
    p->nb_elements++;
 }
 
-void pop_stack(Pile* p, void** bloc){
+void pop_stack(Pile_t* p, void** bloc){
    Pile_elem * to_trash;
    if (!is_stack_empty(p)) {
       *bloc = &(p->suivant->element);
@@ -33,15 +34,15 @@ void pop_stack(Pile* p, void** bloc){
    else *bloc = NULL;
 }
 
-int is_stack_empty(Pile* p){
+int is_stack_empty(Pile_t* p){
    return p->nb_elements <= 0;
 }
 
-void create_stack_from_surface(SURFACE * s, Pile ** stack, Uint32 nb_blocs){
+void create_stack_from_surface(SURFACE * s, Pile_t** stack, Uint32 nb_blocs){
    int width, height;
    Uint32 range, sum = 0, nb_pixel;
    bloc_t *bloc_temp = NULL;
-   *stack = malloc(sizeof(Pile));
+   *stack = malloc(sizeof(Pile_t));
    
    SDL_GetWindowSize(s->window, &width, &height);
    nb_pixel = width * height;

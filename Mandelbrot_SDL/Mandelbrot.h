@@ -8,9 +8,9 @@
 
 #ifndef Mandelbrot_SDL_Mandelbrot_h
 #define Mandelbrot_SDL_Mandelbrot_h
-
-#include "gfx.h"
 #include "Pile.h"
+#include "gfx.h"
+
 
 // Coordinates and size of the window within the Mandelbrot plane.
 // For more examples of coordinates, check out http://www.cuug.ab.ca/dewara/mandelbrot/images.html
@@ -38,8 +38,8 @@ typedef struct
 
 typedef struct
 {
-   unsigned int *s;
-   unsigned int n;
+   params_t * p;
+   Pile_t * s;
 }info_mandelbrot_thread;
 
 

@@ -103,7 +103,7 @@ void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, p
       y += dy;
       
       // Every 32 lines: present surface to screen and check keyboard
-      if (i & 32) {
+      if ((i & 31) == 0) {
          gfx_present(surface);
          if (gfx_is_esc_pressed()) {
             return;

@@ -107,7 +107,7 @@ void unlock_stack(Pile_t* p){
 void free_stack(Pile_t** stack){
    void * to_trash;
    while (!is_stack_empty(*stack)){
-      pop_stack(*stack, to_trash);
+      pop_stack(*stack, &to_trash);
       free(to_trash);
    }
    free(*stack);

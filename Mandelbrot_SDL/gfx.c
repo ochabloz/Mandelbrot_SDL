@@ -239,7 +239,6 @@ void write_char_to_pos(char c, int pos, SURFACE * surface){
    rect_dest.w = CHAR_PIX_W * ZOOM;
    rect_source.h = CHAR_PIX_H;
    rect_dest.h = CHAR_PIX_H * ZOOM;
-   
    SDL_BlitSurface(surface->font, &rect_source, surface->image, &rect_dest);
 }
 

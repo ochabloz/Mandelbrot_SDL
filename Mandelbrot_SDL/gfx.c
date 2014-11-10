@@ -11,7 +11,7 @@
 #include <time.h>
 
 #define NB_ROW 2
-#define NB_COL 20
+#define NB_COL 40
 #define CHAR_PIX_W 14
 #define CHAR_PIX_H 18
 #define ZOOM 1
@@ -64,40 +64,7 @@ uint32 gfx_getpix(SURFACE *surface, int x, int y) {
  * @param width of the window.
  * @param height of the window.
  * @return pointer to the initialized surface or 0 if the call failed.
- *
-SURFACE *gfx_init(char *title, int width, int height) {
-   SURFACE * image = malloc(sizeof(SURFACE));
-   if(!image)
-   {
-      fprintf(stderr,"error allocating SRUFACE memory\n");
-      exit(1);
-   }
-   image->lock = INIT_SPINLOCK(&(image->lock),0);
-   if (SDL_Init(SDL_INIT_VIDEO) == -1) {
-      printf("Unable to initialize SDL!\n");
-      
-      return NULL;
-   }
-   image->ren = creer_fenetre(width, height, title, &(image->window));
-   image->string = malloc(sizeof(char));
-   if(!image->string)
-   {
-      fprintf(stderr,"error allocating string memory for status\n");
-      exit(1);
-   }
-   for (int i = 0; i < NB_COL * NB_ROW ; i++)
-      image->string[i] = '\0';
-   image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
-   SDL_Surface * font = SDL_LoadBMP("font.bmp");
-   if (font == NULL)
-      printf("Warning, font.bmp hasn't been found!\n");
-   image->text_layer = SDL_CreateTextureFromSurface(image->ren, font);
-   SDL_FreeSurface(font);
-   image->lock = INIT_SPINLOCK(0,0);
-   
-   return image;
-}*/
-
+ */
 SURFACE *gfx_init(char *title, int width, int height) {
    if (SDL_Init(SDL_INIT_VIDEO) == -1) {
       printf("Unable to initialize SDL!\n");
@@ -129,13 +96,6 @@ SURFACE *gfx_init(char *title, int width, int height) {
    
    return image;
 }
-/*
-SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow){
-   *pWindow = SDL_CreateWindow(title, 0, 0, x, y, SDL_WINDOW_SHOWN);
-   if(pWindow)
-      return SDL_CreateRenderer(*pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-   return NULL;
-}*/
 
 /**
  * Check whether the ESC key was pressed or windows close button was clicked.
@@ -208,19 +168,17 @@ void * thread_render_present(void * surface){
    while (1) {
       usleep(40000);
       *ticks += 0.04;
-      sprintf(str,"%lf s",*ticks);
+      sprintf(str,"%lf seconds",*ticks);
       gfx_print(str,surface);
-      gfx_lock(s);
       gfx_present(s);
-      gfx_unlock(s);
       if(trylock_spin(&lock) == 0)
       {
          free(ticks);
          pthread_join(t_time,(void**)&ticks);
-         sprintf(str,"%lf s",(*ticks));
+         sprintf(str,"rendered in %lf seconds",(*ticks));
          gfx_print(str,surface);
          gfx_present(surface);
-         printf("rendered in %s\n",str);
+         puts(str);
          unlock_spin(&lock);
          
          return NULL;
@@ -253,7 +211,7 @@ void * thread_is_escaped(void * esc_pressed){
    return NULL;
 }
 
-//Write a char on the top left of the screen. font.bmp is model. "pos" goes from 0 to 40.
+//Write a char on the top left of the screen. font.bmp is model. "pos" goes from 0 to 80.
 void write_char_to_pos(char c, int pos, SURFACE * surface){
    SDL_Rect rect_source, rect_dest;
    if (c >= 'A' && c <='Z') {

@@ -33,6 +33,7 @@ typedef struct colormap_st colormap_t;
 typedef struct
 {
    unsigned int *s;
+   unsigned int index;
    unsigned int n;
 }bloc_t;
 

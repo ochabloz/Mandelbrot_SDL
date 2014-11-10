@@ -14,9 +14,6 @@
 #include "Mandelbrot.h"
 #include "Pile.h"
 
-// Size of the window
-#define WIDTH 1280
-#define HEIGHT 960
 
 
 /**
@@ -37,30 +34,30 @@ int main(int argc, char **argv) {
    }
    
    // Mandelbrot computation parameters
-   params_t p = {
+   /*params_t p = {
       0.2929859127507,
       0.6117848324958,
-      1.0E-11,
+      1.0E-12,
       8000,
-      0.9 };
+      0.9 };*/
    
-   /*
+   
     // Longer computation
-    params_t q = {
+    params_t p = {
     -0.17476469999956,
     -1.0713151000007,
     5.095053e-13,
     8000,
     0.35 };
-    
+    /*
     // Classic coordinates
-    params_t r = {
+    params_t p = {
     -0.65,
     -0.0,
     1.2,
     150,
-    10 };
-    */
+    10 };*/
+   
    
    mandelbrot(surface, &colmap, WIDTH, HEIGHT, &p);
    gfx_close();

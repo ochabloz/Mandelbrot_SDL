@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include "Mandelbrot.h"
+#include "gfx.h"
 #include "stack.h"
 
 void *thread_mandelbrot(void *arg)
@@ -114,4 +115,36 @@ void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, p
    while (!gfx_is_esc_pressed()) {
       usleep(100000);  // Check every 0.1 sec. (10 Hz)
    }
+}
+
+void *Mandelbrot(void *arg)
+{
+   info_mandelbrot_thread *info = (info_mandelbrot_thread*)arg;
+   bloc_t *actual;
+   while(1)
+   {
+      //lock pile
+      lock_stack(info->s);
+      // if pile != empty
+      if(is_stack_empty(info->s))
+      {
+         // get_pile
+         pop_stack(info->s,&actual);
+         // unlock
+         unlock_stack(info->s);
+         // process mandelbrot
+         unsigned int i;   // balayage de la zone
+         for(i = 0; i < actual->n;i++)
+         {
+            long x = (actual->index+i)%WIDTH;
+            long y = (actual->index+i)/WIDTH;
+         }
+      }
+   // else
+   //    unlock
+   //    quit
+   }
+   
+   
+   return NULL;
 }

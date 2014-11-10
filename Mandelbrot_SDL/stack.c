@@ -80,7 +80,7 @@ void create_stack_from_surface(SURFACE * s, Pile_t** stack, Uint32 nb_blocs){
       bloc_temp = malloc(sizeof(bloc_t));
       bloc_temp->n = range;
       bloc_temp->s = s->image->pixels + sum * s->image->pitch / (DEPTH / 8);
-
+      bloc_temp->index = sum;
       push_stack(*stack ,bloc_temp);
       sum += range; // actualise les valeurs pour la prochaine assignation
    }

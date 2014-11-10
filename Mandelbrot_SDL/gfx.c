@@ -9,6 +9,7 @@
 #include "gfx.h"
 #include <string.h>
 #include <time.h>
+#include <stdio.h>
 
 #define NB_ROW 2
 #define NB_COL 40
@@ -204,6 +205,8 @@ void *Thread_Time (void *arg)
    unlock_spin(lock);
    return res;
 }
+
+
 void * thread_is_escaped(void * esc_pressed){
    int * esc = (int*) esc_pressed;
    while (!gfx_is_esc_pressed())

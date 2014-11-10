@@ -102,12 +102,10 @@ void gfx_present(SURFACE *surface) {
    SDL_Texture * tex = SDL_CreateTextureFromSurface(surface->ren, surface->image);
    
    SDL_Rect rect_source, rect_dest;
-   rect_source.x = rect_source.y = 0;
-   rect_dest.y   = rect_dest.x   = 0;
+   rect_source.x = rect_source.y = rect_dest.y = rect_dest.x   = 0;
    SDL_GetWindowSize(surface->window, &(rect_source.w), &(rect_source.h));
    rect_dest.h = rect_source.h;
    rect_dest.w = rect_source.w;
-   
    
    SDL_RenderClear(surface->ren);
    SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
@@ -120,4 +118,12 @@ void gfx_present(SURFACE *surface) {
  */
 void gfx_close() {
    SDL_Quit();
+}
+
+void * thread_render_present(void * surface){
+   while (1) {
+      usleep(40000);  // Check every 0.1 sec. (10 Hz)
+      gfx_present((SURFACE*)surface);
+   }
+   return NULL;
 }

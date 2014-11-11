@@ -64,16 +64,21 @@ int main(int argc, char **argv) {
    //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
    
    //mandelbrot(surface, &colmap, WIDTH, HEIGHT, &t);
+   
+   
+   
+   
    Pile_t *s;
    create_stack_from_surface(surface,&s, 1);
-   //create_stack(&s);
-   //bloc_t b = {NULL,0,HEIGHT*WIDTH};
-   //push_stack(s,&b);
    info_mandelbrot_thread i;
-   i.p = &o;
+   i.p = &t;
    i.s = s;
    i.d = surface;
+   i.c = &colmap;
    Mandelbrot((void*)&i);
+   
+   int res = SDL_SaveBMP(surface->image,"mandelbrot"__TIME__ __DATE__ ".bmp");
+   printf("%d res\n",res);
    gfx_close();
    
    free_colormap(&colmap);

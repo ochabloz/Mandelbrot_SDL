@@ -43,8 +43,8 @@ typedef struct
    params_t * p;
    Pile_t * s;
    SURFACE *d;
+   colormap_t *c;
 }info_mandelbrot_thread;
-
 
 
 void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, params_t *p);

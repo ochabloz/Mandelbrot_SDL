@@ -16,8 +16,8 @@
 
 #define DEPTH 32
 // Size of the window
-#define WIDTH 1200
-#define HEIGHT 801
+#define WIDTH 2880
+#define HEIGHT 1800
 
 
 // Macros to pack and unpack color components.

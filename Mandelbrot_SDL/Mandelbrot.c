@@ -12,29 +12,6 @@
 #include "stack.h"
 #include <math.h>
 
-void *thread_mandelbrot(void *arg)
-{
-/*   args_t *a = arg;  //struct
-   
-   bloc_t *b;
-   unsigned int left;
-   //lock stack
-   while(1)
-   {
-      //lock stack
-      left = isleft(p);
-      if(left==0)
-      {
-         //unlock stack
-         break;
-      }
-      b = pop(p);
-      //unlock stack
-      
-   }
-   */
-   return NULL;
-}
 
 /**
  * Create the colormap.
@@ -124,6 +101,7 @@ void *Mandelbrot(void *arg)
 {
    info_mandelbrot_thread *info = (info_mandelbrot_thread*)arg;
    bloc_t *actual;
+   
    //lock param_t info->p
    params_t p;
    memcpy(&p,info->p,sizeof(params_t)-sizeof(SPINLOCK_T));
@@ -131,27 +109,27 @@ void *Mandelbrot(void *arg)
    while(1)
    {
       //lock pile
-      //lock_stack(info->s);
+      lock_stack(info->s);
       // if pile != empty
       if(!is_stack_empty(info->s))
       {
          // get_pile
          pop_stack(info->s,(void**)&actual);
          // unlock
-         //unlock_stack(info->s);
+         unlock_stack(info->s);
          // process mandelbrot
          
          long i = (actual->index)%WIDTH;
          long j = (actual->index)/WIDTH;
          
-         long j_prev = actual->index/WIDTH;
+         long j_prev = j;
          
          double x1 =  p.xc - p.size;
          double x2 =  p.xc + p.size;
          double y1 =  p.yc - p.size;
          double y2 =  p.yc + p.size;
-         double dx = (x2 - x1) / WIDTH;
-         double dy = (y2 - y1) / WIDTH;
+         double dx = (x2 - x1) / (double)WIDTH;
+         double dy = (y2 - y1) / (double)WIDTH;
          double y = y1 + j*dy;
          double x = x1 + i*dx;
          
@@ -161,8 +139,16 @@ void *Mandelbrot(void *arg)
          {
             i = (actual->index+k)%WIDTH;
             j = (actual->index+k)/WIDTH;
+            if(j_prev != j)
+            {
+               x = x1;
+               y += dy;
+               gfx_present(info->d);
+               j_prev = j;
+            }
             double zx = 0,zy = 0;
-            for(long depth = 0; depth < p.max_iter; depth ++)
+            long depth;
+            for(depth = 0; depth < p.max_iter; depth ++)
             {
                double zx_new = (zx*zx) - (zy*zy) + x;
                double zy_new = 2.0*zx*zy + y;
@@ -170,23 +156,34 @@ void *Mandelbrot(void *arg)
                zy = zy_new;
                // Did the pixel diverge (go to infinity)?
                if ((zx*zx + zy*zy) > 4.0) {
-                  int c = (int)255*((float)depth/(float)p.max_iter);
-                  //colmap->map[((int)((double)depth*p->dcol)) % colmap->length];
-                  color = c | (c<<8) | (c<<16);
+                  //double sm = depth - (log2(log2(sqrt(zx*zx+zy*zy))));
+                  //double sm = exp(-sqrt(zx*zx+zy*zy)) * info->c->length;
+                  //color=info->c->map[(int)sm];
+                  color = info->c->map[((int)((double)depth*p.dcol)) % info->c->length];
+                  //printf("%f\n",sm);
+                  //color = info->c->map[(int)((double)(depth/(double)p.max_iter)*(double)info->c->length)];
+                  
+                  //color = info->c->map[(int)((double)(depth- log2(log2(sqrt(zx*zx+zy*zy)))))];
+                  gfx_setpix(info->d, (int)i,(int)j, color);
+                  x += dx;
                   break;
                }
+
             }
-            if(j_prev != j)
+            if(depth == p.max_iter)
             {
-               y += dy;
+               color = COLOR(0,0,0);//info->c->map[((int)((double)depth*p.dcol)) % info->c->length];
+               //color = info->c->map[(int)((double)(depth/(double)p.max_iter)*(double)info->c->length)];
+               gfx_setpix(info->d, (int)i,(int)j, color);
+               x += dx;
             }
-            gfx_setpix(info->d, i,j, color);
-            
+
          }
       }
    // else
       else
       {
+         unlock_stack(info->p);
          break;
       }
    //    unlock

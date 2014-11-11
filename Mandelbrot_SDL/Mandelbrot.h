@@ -20,6 +20,7 @@ struct params_st {
    double size;	// size of the window in the complex plane
    long max_iter;	// maximum number of iterations
    double dcol;	// color increment (> 0)
+   SPINLOCK_T lock;
 };
 typedef struct params_st params_t;
 
@@ -41,6 +42,7 @@ typedef struct
 {
    params_t * p;
    Pile_t * s;
+   SURFACE *d;
 }info_mandelbrot_thread;
 
 
@@ -48,5 +50,6 @@ typedef struct
 void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, params_t *p);
 void create_colormap(colormap_t *colmap);
 void free_colormap(colormap_t *colmap);
+void *Mandelbrot(void *arg);
 
 #endif

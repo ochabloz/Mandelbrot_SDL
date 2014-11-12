@@ -140,3 +140,7 @@ void * thread_render_present(void * surface){
    }
    return NULL;
 }
+
+void write_char_to_pos(char c, int pos, SURFACE * surface){
+   
+}

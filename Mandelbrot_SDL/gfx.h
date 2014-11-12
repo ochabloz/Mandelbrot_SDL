@@ -13,7 +13,6 @@
 #include <time.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-#include "stack.h"
 #include "spinlock.h"
 #define DEPTH 32
 // Size of the window
@@ -32,7 +31,7 @@ typedef Uint8 uint8;
 typedef struct SURFACE SURFACE;
 
 struct SURFACE{
-   SDL_Surface * image;
+   SDL_Surface * image, * text_layer;
    SDL_Window * window;
    SDL_Renderer * ren;
    SPINLOCK_T lock;

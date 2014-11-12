@@ -8,7 +8,10 @@
 
 #include "gfx.h"
 
-
+#define NB_ROW 2
+#define NB_COL 20
+#define CHAR_PIX_W 5
+#define CHAR_PIX_H 5
 
 /**
  * Compute pixel address for coordinates (x,y).
@@ -64,7 +67,7 @@ SURFACE *gfx_init(char *title, int width, int height) {
    image->ren = creer_fenetre(width, height, title, &(image->window));
    
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
-   
+   image->text_layer = SDL_CreateRGBSurface(0, NB_COL * CHAR_PIX_W, NB_ROW * CHAR_PIX_H, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
    image->lock = OS_SPINLOCK_INIT;
    
    return image;
@@ -111,8 +114,20 @@ void gfx_present(SURFACE *surface) {
    
    SDL_RenderClear(surface->ren);
    SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
-   SDL_RenderPresent(surface->ren);
    SDL_DestroyTexture(tex);
+   
+   // Render layer2 (text)
+   
+   rect_dest.x = rect_source.w - NB_COL * CHAR_PIX_W;
+   rect_dest.y = rect_source.h - NB_ROW * CHAR_PIX_H;
+   rect_source.x = rect_source.y = 0;
+   rect_source.w = rect_dest.w = NB_COL * CHAR_PIX_W;
+   rect_source.h = rect_dest.h = NB_ROW * CHAR_PIX_H;
+   tex = SDL_CreateTextureFromSurface(surface->ren, surface->text_layer);
+   SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
+   
+   // affiche le tout à l'image
+   SDL_RenderPresent(surface->ren);
 }
 
 extern bool gfx_lock(SURFACE *surface){
@@ -142,5 +157,6 @@ void * thread_render_present(void * surface){
 }
 
 void write_char_to_pos(char c, int pos, SURFACE * surface){
+   SDL_Surface * font = SDL_LoadBMP("font.bmp");
    
 }

@@ -24,7 +24,8 @@ void push_stack(Pile_t* p, void* bloc){
 void pop_stack(Pile_t* p, void** bloc){
    Pile_elem * to_trash;
    if (!is_stack_empty(p)) {
-      *bloc = &(p->suivant->element);
+      *bloc = (p->suivant->element);   //corrected
+
       to_trash = p->suivant;
       if (p->nb_elements > 1)
          p->suivant = p->suivant->suivant;
@@ -40,6 +41,8 @@ int is_stack_empty(Pile_t* p){
 }
 void create_stack(Pile_t** stack){
    *stack = malloc(sizeof(Pile_t));
+   (*stack)->nb_elements = 0;
+   (*stack)->suivant = NULL;
 }
 
 void lock_stack(Pile_t* p){

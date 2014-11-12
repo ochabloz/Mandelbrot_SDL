@@ -10,30 +10,8 @@
 #include "Mandelbrot.h"
 #include "gfx.h"
 #include "stack.h"
+#include <math.h>
 
-void *thread_mandelbrot(void *arg)
-{
-/*   args_t *a = arg;  //struct
-   
-   bloc_t *b;
-   unsigned int left;
-   //lock stack
-   while(1)
-   {
-      //lock stack
-      left = isleft(p);
-      if(left==0)
-      {
-         //unlock stack
-         break;
-      }
-      b = pop(p);
-      //unlock stack
-      
-   }
-   */
-   return NULL;
-}
 
 /**
  * Create the colormap.
@@ -41,10 +19,10 @@ void *thread_mandelbrot(void *arg)
  */
 void create_colormap(colormap_t *colmap) {
    int shade_count = 256;
-   int step_count = 3;
+   int step_count = 5;
    colmap->length = shade_count * step_count;
    colmap->map = (uint32 *) malloc(sizeof(uint32) * colmap->length);
-   uint32 steps[] = { COLOR(6,88,189), COLOR(6,214,100), COLOR(255,99,133) };
+   uint32 steps[] = { COLOR(0,7,100), COLOR(32,107,203), COLOR(255,255,255), COLOR(255,170,0), COLOR(0,2,0) };
    int c = 0;
    for (int j = 0; j < step_count; j++) {
       double dr = ((double)COLOR_GET_R(steps[(j+1) % step_count]) - (double)COLOR_GET_R(steps[j]))/(double)shade_count;
@@ -94,6 +72,8 @@ void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, p
             zy = zy_new;
             // Did the pixel diverge (go to infinity)?
             if ((zx*zx + zy*zy) > 4.0) {
+               //double dist = log(sqrt(zx*zx+zy*zy))/pow(2,depth);
+               //color = colmap->map[((int)((double)dist*depth*p->dcol)) % colmap->length];
                color = colmap->map[((int)((double)depth*p->dcol)) % colmap->length];
                break;
             }
@@ -121,29 +101,95 @@ void *Mandelbrot(void *arg)
 {
    info_mandelbrot_thread *info = (info_mandelbrot_thread*)arg;
    bloc_t *actual;
+   
+   //lock param_t info->p
+   params_t p;
+   memcpy(&p,info->p,sizeof(params_t)-sizeof(SPINLOCK_T));
+   //unlock info->p
    while(1)
    {
       //lock pile
       lock_stack(info->s);
       // if pile != empty
-      if(is_stack_empty(info->s))
+      if(!is_stack_empty(info->s))
       {
          // get_pile
-         pop_stack(info->s,&actual);
+         pop_stack(info->s,(void**)&actual);
          // unlock
          unlock_stack(info->s);
          // process mandelbrot
-         unsigned int i;   // balayage de la zone
-         for(i = 0; i < actual->n;i++)
+         
+         long i = (actual->index)%WIDTH;
+         long j = (actual->index)/WIDTH;
+         
+         long j_prev = j;
+         
+         double x1 =  p.xc - p.size;
+         double x2 =  p.xc + p.size;
+         double y1 =  p.yc - p.size;
+         double y2 =  p.yc + p.size;
+         double dx = (x2 - x1) / (double)WIDTH;
+         double dy = (y2 - y1) / (double)WIDTH;
+         double y = y1 + j*dy;
+         double x = x1 + i*dx;
+         
+         int color = 0;
+         
+         for(int k = 0; k < actual->n;k++)
          {
-            long x = (actual->index+i)%WIDTH;
-            long y = (actual->index+i)/WIDTH;
+            i = (actual->index+k)%WIDTH;
+            j = (actual->index+k)/WIDTH;
+            if(j_prev != j)
+            {
+               x = x1;
+               y += dy;
+               gfx_present(info->d);
+               j_prev = j;
+            }
+            double zx = 0,zy = 0;
+            long depth;
+            for(depth = 0; depth < p.max_iter; depth ++)
+            {
+               double zx_new = (zx*zx) - (zy*zy) + x;
+               double zy_new = 2.0*zx*zy + y;
+               zx = zx_new;
+               zy = zy_new;
+               // Did the pixel diverge (go to infinity)?
+               if ((zx*zx + zy*zy) > 4.0) {
+                  //double sm = depth - (log2(log2(sqrt(zx*zx+zy*zy))));
+                  //double sm = exp(-sqrt(zx*zx+zy*zy)) * info->c->length;
+                  //color=info->c->map[(int)sm];
+                  color = info->c->map[((int)((double)depth*p.dcol)) % info->c->length];
+                  //printf("%f\n",sm);
+                  //color = info->c->map[(int)((double)(depth/(double)p.max_iter)*(double)info->c->length)];
+                  
+                  //color = info->c->map[(int)((double)(depth- log2(log2(sqrt(zx*zx+zy*zy)))))];
+                  gfx_setpix(info->d, (int)i,(int)j, color);
+                  x += dx;
+                  break;
+               }
+
+            }
+            if(depth == p.max_iter)
+            {
+               color = COLOR(0,0,0);//info->c->map[((int)((double)depth*p.dcol)) % info->c->length];
+               //color = info->c->map[(int)((double)(depth/(double)p.max_iter)*(double)info->c->length)];
+               gfx_setpix(info->d, (int)i,(int)j, color);
+               x += dx;
+            }
+
          }
       }
    // else
+      else
+      {
+         unlock_stack(info->p);
+         break;
+      }
    //    unlock
    //    quit
    }
+
    
    
    return NULL;

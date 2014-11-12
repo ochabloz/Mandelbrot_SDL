@@ -12,6 +12,7 @@
 		096A22981A0BB45800387E02 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 096A22971A0BB45800387E02 /* SDL2.framework */; };
 		096A22A11A0BB58200387E02 /* gfx.c in Sources */ = {isa = PBXBuildFile; fileRef = 096A229F1A0BB58200387E02 /* gfx.c */; };
 		2D5963F21A0BC13A0055C765 /* Mandelbrot.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D5963F11A0BC13A0055C765 /* Mandelbrot.c */; };
+		2DB507611A13A20100D24F2B /* spinlock.c in Sources */ = {isa = PBXBuildFile; fileRef = 2DB5075F1A13A20100D24F2B /* spinlock.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,8 @@
 		096A22A01A0BB58200387E02 /* gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
 		2D5963F01A0BBDE50055C765 /* Mandelbrot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mandelbrot.h; sourceTree = "<group>"; };
 		2D5963F11A0BC13A0055C765 /* Mandelbrot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Mandelbrot.c; sourceTree = "<group>"; };
+		2DB5075F1A13A20100D24F2B /* spinlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = spinlock.c; sourceTree = "<group>"; };
+		2DB507601A13A20100D24F2B /* spinlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spinlock.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +74,8 @@
 			isa = PBXGroup;
 			children = (
 				090E1BFF1A0BB20200CAFB44 /* main.c */,
+				2DB5075F1A13A20100D24F2B /* spinlock.c */,
+				2DB507601A13A20100D24F2B /* spinlock.h */,
 				0953A4A01A10BB2800EDBA0A /* stack.c */,
 				0953A4A11A10BB2800EDBA0A /* stack.h */,
 				2D5963F01A0BBDE50055C765 /* Mandelbrot.h */,
@@ -141,6 +146,7 @@
 				090E1C001A0BB20200CAFB44 /* main.c in Sources */,
 				096A22A11A0BB58200387E02 /* gfx.c in Sources */,
 				2D5963F21A0BC13A0055C765 /* Mandelbrot.c in Sources */,
+				2DB507611A13A20100D24F2B /* spinlock.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

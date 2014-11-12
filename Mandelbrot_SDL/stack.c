@@ -43,11 +43,12 @@ void create_stack(Pile_t** stack){
    *stack = malloc(sizeof(Pile_t));
    (*stack)->nb_elements = 0;
    (*stack)->suivant = NULL;
+   (*stack)->lock = OS_SPINLOCK_INIT; // TODO : Corriger cela pour la version linux
 }
 
 void lock_stack(Pile_t* p){
 #ifdef __APPLE__
-   OSSpinLockLock(&(p->lock));
+   OSSpinLockLock(&((p->lock)));
 #else
    pthread_spin_lock(&(p->lock));
 #endif

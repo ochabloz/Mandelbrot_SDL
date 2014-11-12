@@ -44,7 +44,6 @@ int main(int argc, char **argv) {
     10 };
    
    
-   pthread_t * thread_refresh;
    
    //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
    
@@ -93,10 +92,12 @@ int main(int argc, char **argv) {
    i.s = s;
    i.d = surface;
    i.c = &colmap;
+   i.lock = OS_SPINLOCK_INIT;
    
-   
+   pthread_t * thread_refresh;
    clock_t start, end;
    start = clock();
+   pthread_create(thread_refresh, NULL, T_refresh, (void*)surface);
    Mandelbrot((void*)&i);
    end = clock();
    end = end-start;

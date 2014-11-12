@@ -14,6 +14,9 @@
 #ifdef __APPLE__
 #include <libkern/OSAtomic.h>
 #define SPINLOCK_T OSSpinLock
+#define lock_spin(x) OSSpinLockLock(x)
+#define unlock_spin(x) OSSpinLockUnlock(x)
+#define trylock_spin(x) OSSpinLockTry(x)
 #else
 #define SPINLOCK_T pthread_spinlock_t
 #endif

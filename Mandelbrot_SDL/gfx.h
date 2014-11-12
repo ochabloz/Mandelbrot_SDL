@@ -13,6 +13,7 @@
 #include <time.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "stack.h"
 
 #define DEPTH 32
 // Size of the window
@@ -34,6 +35,7 @@ struct SURFACE{
    SDL_Surface * image;
    SDL_Window * window;
    SDL_Renderer * ren;
+   SPINLOCK_T lock;
 };
 
 SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow);

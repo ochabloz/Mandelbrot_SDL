@@ -44,6 +44,7 @@ typedef struct
    Pile_t * s;
    SURFACE *d;
    colormap_t *c;
+   SPINLOCK_T lock;
 }info_mandelbrot_thread;
 
 

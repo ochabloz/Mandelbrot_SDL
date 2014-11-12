@@ -13,12 +13,11 @@
 #include <time.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-#include "stack.h"
 #include "spinlock.h"
 #define DEPTH 32
 // Size of the window
-#define WIDTH  600//(5760)//1600//2880
-#define HEIGHT 800//(3600)//900//1800
+#define WIDTH  1920//(5760)//1600//2880
+#define HEIGHT 1080//(3600)//900//1800
 
 
 // Macros to pack and unpack color components.

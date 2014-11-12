@@ -10,6 +10,7 @@
 #define Mandelbrot_SDL_Mandelbrot_h
 #include "stack.h"
 #include "gfx.h"
+#include "spinlock.h"
 
 
 // Coordinates and size of the window within the Mandelbrot plane.

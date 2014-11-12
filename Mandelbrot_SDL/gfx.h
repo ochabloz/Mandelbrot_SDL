@@ -14,7 +14,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "stack.h"
-
+#include "spinlock.h"
 #define DEPTH 32
 // Size of the window
 #define WIDTH  600//(5760)//1600//2880

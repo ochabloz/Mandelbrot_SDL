@@ -10,16 +10,7 @@
 #define __Mandelbrot_SDL__stack__
 
 #include "gfx.h"
-#include <pthread.h>
-#ifdef __APPLE__
-#include <libkern/OSAtomic.h>
-#define SPINLOCK_T OSSpinLock
-#define lock_spin(x) OSSpinLockLock(x)
-#define unlock_spin(x) OSSpinLockUnlock(x)
-#define trylock_spin(x) OSSpinLockTry(x)
-#else
-#define SPINLOCK_T pthread_spinlock_t
-#endif
+#include "spinlock.h"
 
 typedef struct Pile_t Pile_t;
 typedef struct Pile_elem Pile_elem;

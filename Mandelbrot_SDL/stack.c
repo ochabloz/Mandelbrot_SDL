@@ -48,7 +48,7 @@ void create_stack(Pile_t** stack){
 
 void lock_stack(Pile_t* p){
 #ifdef __APPLE__
-   OSSpinLockLock(&(p->lock));
+   OSSpinLockLock(&((p->lock)));
 #else
    pthread_spin_lock(&(p->lock));
 #endif

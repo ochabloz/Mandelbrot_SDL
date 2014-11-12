@@ -65,6 +65,8 @@ SURFACE *gfx_init(char *title, int width, int height) {
    
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
    
+   image->lock = OS_SPINLOCK_INIT;
+   
    return image;
 }
 
@@ -111,6 +113,15 @@ void gfx_present(SURFACE *surface) {
    SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
    SDL_RenderPresent(surface->ren);
    SDL_DestroyTexture(tex);
+}
+
+extern bool gfx_lock(SURFACE *surface){
+   OSSpinLockLock(&(surface->lock));
+   return true;
+}
+
+extern void gfx_unlock(SURFACE *surface){
+   OSSpinLockUnlock(&(surface->lock));
 }
 
 /**

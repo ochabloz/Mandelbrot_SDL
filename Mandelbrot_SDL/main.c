@@ -45,9 +45,9 @@ int main(int argc, char **argv) {
    
    
    
-   //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
+  //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
    
-   //mandelbrot(surface, &colmap, WIDTH, HEIGHT, &t);
+   mandelbrot(surface, &colmap, WIDTH, HEIGHT, &p);
    
    
    

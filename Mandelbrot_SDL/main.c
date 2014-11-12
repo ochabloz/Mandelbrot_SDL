@@ -61,9 +61,10 @@ int main(int argc, char **argv) {
    
    pthread_t * thread_refresh;
    
-   //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
+  //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
    
    mandelbrot(surface, &colmap, WIDTH, HEIGHT, &p);
+   
    gfx_close();
    
    free_colormap(&colmap);

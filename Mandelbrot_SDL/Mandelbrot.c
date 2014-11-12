@@ -109,14 +109,14 @@ void *Mandelbrot(void *arg)
    while(1)
    {
       //lock pile
-      //lock_stack(info->s);
+      lock_stack(info->s);
       // if pile != empty
       if(!is_stack_empty(info->s))
       {
          // get_pile
          pop_stack(info->s,(void**)&actual);
          // unlock
-         //unlock_stack(info->s);
+         unlock_stack(info->s);
          // process mandelbrot
          
          long i = (actual->index)%WIDTH;
@@ -154,17 +154,12 @@ void *Mandelbrot(void *arg)
                double zy_new = 2.0*zx*zy + y;
                zx = zx_new;
                zy = zy_new;
-               // Did the pixel diverge (go to infinity)?
                if ((zx*zx + zy*zy) > 4.0) {
-                  //double sm = depth - (log2(log2(sqrt(zx*zx+zy*zy))));
-                  //double sm = exp(-sqrt(zx*zx+zy*zy)) * info->c->length;
-                  //color=info->c->map[(int)sm];
+
                   color = info->c->map[((int)((double)depth*p.dcol)) % info->c->length];
-                  //printf("%f\n",sm);
-                  //color = info->c->map[(int)((double)(depth/(double)p.max_iter)*(double)info->c->length)];
-                  
-                  //color = info->c->map[(int)((double)(depth- log2(log2(sqrt(zx*zx+zy*zy)))))];
+                  gfx_lock(info->d);
                   gfx_setpix(info->d, (int)i,(int)j, color);
+                  gfx_unlock(info->d);
                   x += dx;
                   break;
                }
@@ -172,22 +167,22 @@ void *Mandelbrot(void *arg)
             }
             if(depth == p.max_iter)
             {
-               color = COLOR(0,0,0);//info->c->map[((int)((double)depth*p.dcol)) % info->c->length];
-               //color = info->c->map[(int)((double)(depth/(double)p.max_iter)*(double)info->c->length)];
+               color = COLOR(0,0,0);
+               gfx_lock(info->d);
                gfx_setpix(info->d, (int)i,(int)j, color);
+               gfx_unlock(info->d);
                x += dx;
             }
-
          }
       }
    // else
       else
       {
-         //unlock_stack(info->p);
+         //    unlock
+         //    quit
+         unlock_stack(info->s);
          break;
       }
-   //    unlock
-   //    quit
    }
 
    

@@ -43,7 +43,7 @@ void create_stack(Pile_t** stack){
    *stack = malloc(sizeof(Pile_t));
    (*stack)->nb_elements = 0;
    (*stack)->suivant = NULL;
-   (*stack)->lock = OS_SPINLOCK_INIT; // TODO : Corriger cela pour la version linux
+   (*stack)->lock = OS_SPINLOCK_INIT;
 }
 
 void lock_stack(Pile_t* p){

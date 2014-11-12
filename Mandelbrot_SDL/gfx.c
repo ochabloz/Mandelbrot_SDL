@@ -134,7 +134,9 @@ void gfx_close() {
 void * thread_render_present(void * surface){
    while (1) {
       usleep(40000);  // Check every 0.1 sec. (10 Hz)
+      gfx_lock(surface);
       gfx_present((SURFACE*)surface);
+      gfx_unlock(surface);
    }
    return NULL;
 }

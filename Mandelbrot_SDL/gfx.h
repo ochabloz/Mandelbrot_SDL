@@ -52,4 +52,7 @@ extern void gfx_close();
 
 // Threaded functions
 void * thread_render_present(void * surface);
+
+// Text fonction
+extern void gfx_write_str(char *);
 #endif

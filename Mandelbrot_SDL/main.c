@@ -24,6 +24,7 @@
  * @return status code.
  */
 int main(int argc, char **argv) {
+   
    colormap_t colmap;
    create_colormap(&colmap);
    
@@ -92,12 +93,11 @@ int main(int argc, char **argv) {
    i.s = s;
    i.d = surface;
    i.c = &colmap;
-   i.lock = OS_SPINLOCK_INIT;
    
-   pthread_t * thread_refresh;
+   pthread_t  thread_refresh;
    clock_t start, end;
    start = clock();
-   pthread_create(thread_refresh, NULL,thread_render_present , (void*)surface);
+   pthread_create(&thread_refresh, NULL,thread_render_present ,surface);
    Mandelbrot((void*)&i);
    end = clock();
    end = end-start;

@@ -101,10 +101,10 @@ void *Mandelbrot(void *arg)
 {
    info_mandelbrot_thread *info = (info_mandelbrot_thread*)arg;
    bloc_t *actual;
-   
-   //lock param_t info->p
    params_t p;
+   //lock_spin(&(info->lock));
    memcpy(&p,info->p,sizeof(params_t)-sizeof(SPINLOCK_T));
+   //unlock_spin(&(info->lock));
    //unlock info->p
    while(1)
    {
@@ -143,7 +143,7 @@ void *Mandelbrot(void *arg)
             {
                x = x1;
                y += dy;
-               gfx_present(info->d);
+               //gfx_present(info->d);
                j_prev = j;
             }
             double zx = 0,zy = 0;

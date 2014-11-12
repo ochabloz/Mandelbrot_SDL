@@ -58,12 +58,14 @@ uint32 gfx_getpix(SURFACE *surface, int x, int y) {
  * @return pointer to the initialized surface or 0 if the call failed.
  */
 SURFACE *gfx_init(char *title, int width, int height) {
+   SURFACE * image = malloc(sizeof(SURFACE));
+   image->lock = OS_SPINLOCK_INIT;
    if (SDL_Init(SDL_INIT_VIDEO) == -1) {
       printf("Unable to initialize SDL!\n");
       
       return NULL;
    }
-   SURFACE * image = malloc(sizeof(SURFACE));
+   //SURFACE * image = malloc(sizeof(SURFACE));
    image->ren = creer_fenetre(width, height, title, &(image->window));
    
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
@@ -130,13 +132,14 @@ void gfx_present(SURFACE *surface) {
    SDL_RenderPresent(surface->ren);
 }
 
-extern bool gfx_lock(SURFACE *surface){
+bool gfx_lock(SURFACE *surface){
    OSSpinLockLock(&(surface->lock));
    return true;
 }
 
-extern void gfx_unlock(SURFACE *surface){
+void gfx_unlock(SURFACE *surface){
    OSSpinLockUnlock(&(surface->lock));
+   //(*surface)->lock = OS_SPINLOCK_INIT;
 }
 
 /**
@@ -147,11 +150,12 @@ void gfx_close() {
 }
 
 void * thread_render_present(void * surface){
+   SURFACE* s = surface;
    while (1) {
       usleep(40000);  // Check every 0.1 sec. (10 Hz)
-      gfx_lock(surface);
-      gfx_present((SURFACE*)surface);
-      gfx_unlock(surface);
+      gfx_lock(s);
+      gfx_present(s);
+      gfx_unlock(s);
    }
    return NULL;
 }

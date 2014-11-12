@@ -34,6 +34,7 @@
 		096A22971A0BB45800387E02 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		096A229F1A0BB58200387E02 /* gfx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gfx.c; sourceTree = "<group>"; };
 		096A22A01A0BB58200387E02 /* gfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gfx.h; sourceTree = "<group>"; };
+		097B974E1A13A294004601E4 /* font.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = font.bmp; sourceTree = "<group>"; };
 		2D5963F01A0BBDE50055C765 /* Mandelbrot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mandelbrot.h; sourceTree = "<group>"; };
 		2D5963F11A0BC13A0055C765 /* Mandelbrot.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Mandelbrot.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +71,7 @@
 		090E1BFE1A0BB20200CAFB44 /* Mandelbrot_SDL */ = {
 			isa = PBXGroup;
 			children = (
+				097B974E1A13A294004601E4 /* font.bmp */,
 				090E1BFF1A0BB20200CAFB44 /* main.c */,
 				0953A4A01A10BB2800EDBA0A /* stack.c */,
 				0953A4A11A10BB2800EDBA0A /* stack.h */,

@@ -13,6 +13,7 @@
 #include "gfx.h"
 #include "Mandelbrot.h"
 #include "stack.h"
+#include <time.h>
 
 
 
@@ -33,23 +34,7 @@ int main(int argc, char **argv) {
       return EXIT_FAILURE;
    }
    
-   // Mandelbrot computation parameters
-   params_t p = {
-      0.2929859127507,
-      0.6117848324958,
-      1.0E-12,
-      4000,
-      0.9 };
    
-   
-     //Longer computation
-    params_t t = {
-    -0.17476469999956,
-    -1.0713151001,
-    5.095053e-10,
-    4000,
-    0.9 };
-    
     // Classic coordinates
     params_t o = {
     -0.65,
@@ -68,6 +53,6 @@ int main(int argc, char **argv) {
    gfx_close();
    
    free_colormap(&colmap);
-   
+   free(str);
    return EXIT_SUCCESS;
 }

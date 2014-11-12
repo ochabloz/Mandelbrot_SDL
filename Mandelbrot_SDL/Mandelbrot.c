@@ -109,14 +109,14 @@ void *Mandelbrot(void *arg)
    while(1)
    {
       //lock pile
-      lock_stack(info->s);
+      //lock_stack(info->s);
       // if pile != empty
       if(!is_stack_empty(info->s))
       {
          // get_pile
          pop_stack(info->s,(void**)&actual);
          // unlock
-         unlock_stack(info->s);
+         //unlock_stack(info->s);
          // process mandelbrot
          
          long i = (actual->index)%WIDTH;
@@ -183,7 +183,7 @@ void *Mandelbrot(void *arg)
    // else
       else
       {
-         unlock_stack(info->p);
+         //unlock_stack(info->p);
          break;
       }
    //    unlock

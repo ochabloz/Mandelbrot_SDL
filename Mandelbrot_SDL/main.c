@@ -15,7 +15,9 @@
 #include "stack.h"
 #include <time.h>
 
-#define PARAM_NUM 0
+#define PARAM_NUM 1
+#define NB_BLOCKS 150
+#define NB_THREAD 4
 
 /**
  * Program's entry point.
@@ -24,7 +26,7 @@
  * @return status code.
  */
 int main(int argc, char **argv) {
-   
+   int i;
    colormap_t colmap;
    create_colormap(&colmap);
    
@@ -35,22 +37,28 @@ int main(int argc, char **argv) {
       return EXIT_FAILURE;
    }
    
-   params_t parametres[3] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
+   params_t parametres[] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
       {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
       {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }}; //good one
    
-   Pile_t *s;
-   create_stack_from_surface(surface,&s, 1);
-   info_mandelbrot_thread i;
-   i.p = &parametres[PARAM_NUM];
-   i.s = s;
-   i.d = surface;
-   i.c = &colmap;
+   pthread_t mandelbrot_t[NB_THREAD];
    
-   pthread_t  thread_refresh, mandela;
+   Pile_t *s;
+   create_stack_from_surface(surface,&s, NB_BLOCKS);
+   info_mandelbrot_thread info;
+   info.p = &parametres[PARAM_NUM];
+   info.s = s;
+   info.d = surface;
+   info.c = &colmap;
+   
+
    clock_t start, end;
    start = clock();
-   pthread_create(&mandela, NULL,Mandelbrot ,&i);
+   
+   for (i = 0; i < NB_THREAD; i++) {
+      pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info);
+   }
+   
 
    while (!gfx_is_esc_pressed()) {
       usleep(40000);

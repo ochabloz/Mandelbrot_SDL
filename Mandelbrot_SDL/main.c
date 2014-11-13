@@ -15,7 +15,7 @@
 #include "stack.h"
 #include <time.h>
 
-#define PARAM_NUM 1
+#define PARAM_NUM 2
 #define NB_BLOCKS 150
 #define NB_THREAD 4
 
@@ -27,6 +27,7 @@
  */
 int main(int argc, char **argv) {
    int i;
+   int esc_has_been_pressed = 0;
    colormap_t colmap;
    create_colormap(&colmap);
    
@@ -41,7 +42,7 @@ int main(int argc, char **argv) {
       {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
       {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }}; //good one
    
-   pthread_t mandelbrot_t[NB_THREAD];
+   pthread_t mandelbrot_t[NB_THREAD], refresher;
    
    Pile_t *s;
    create_stack_from_surface(surface,&s, NB_BLOCKS);
@@ -58,9 +59,9 @@ int main(int argc, char **argv) {
    for (i = 0; i < NB_THREAD; i++) {
       pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info);
    }
-   
+   pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed);
 
-   while (!gfx_is_esc_pressed()) {
+   while (!esc_has_been_pressed) {
       usleep(40000);
       gfx_present(surface);
    }

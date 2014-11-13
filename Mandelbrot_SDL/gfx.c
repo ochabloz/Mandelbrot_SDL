@@ -160,6 +160,15 @@ void * thread_render_present(void * surface){
    return NULL;
 }
 
+void * thread_is_escaped(void * esc_pressed){
+   int * esc = (int*) esc_pressed;
+   while (!gfx_is_esc_pressed())
+      usleep(10000);
+   *esc = 1;
+   return NULL;
+}
+
+
 void write_char_to_pos(char c, int pos, SURFACE * surface){
    SDL_Surface * font = SDL_LoadBMP("font.bmp");
    

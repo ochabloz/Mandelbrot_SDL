@@ -13,6 +13,7 @@
 #define CHAR_PIX_W 5
 #define CHAR_PIX_H 5
 
+int initiated = 0;
 /**
  * Compute pixel address for coordinates (x,y).
  * @param surface for which to compute the position.
@@ -65,21 +66,18 @@ SURFACE *gfx_init(char *title, int width, int height) {
       
       return NULL;
    }
-   //SURFACE * image = malloc(sizeof(SURFACE));
-   image->ren = creer_fenetre(width, height, title, &(image->window));
+
+   image->window = SDL_CreateWindow(title, 0, 0, width, height, SDL_WINDOW_SHOWN);
    
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
+   image->ecran = SDL_GetWindowSurface(image->window);
    image->text_layer = SDL_CreateRGBSurface(0, NB_COL * CHAR_PIX_W, NB_ROW * CHAR_PIX_H, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
-   image->lock = OS_SPINLOCK_INIT;
    
    return image;
 }
 
-SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow){
+void creer_fenetre(int x, int y, char * title, SDL_Window** pWindow){
    *pWindow = SDL_CreateWindow(title, 0, 0, x, y, SDL_WINDOW_SHOWN);
-   if(pWindow)
-      return SDL_CreateRenderer(*pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-   return NULL;
 }
 
 /**
@@ -106,40 +104,26 @@ bool gfx_is_esc_pressed() {
  * @param surface to present.
  */
 void gfx_present(SURFACE *surface) {
-   SDL_Texture * tex = SDL_CreateTextureFromSurface(surface->ren, surface->image);
+
    
-   SDL_Rect rect_source, rect_dest;
-   rect_source.x = rect_source.y = rect_dest.y = rect_dest.x   = 0;
-   SDL_GetWindowSize(surface->window, &(rect_source.w), &(rect_source.h));
-   rect_dest.h = rect_source.h;
-   rect_dest.w = rect_source.w;
+   SDL_BlitSurface(surface->image, NULL, surface->ecran, NULL);
    
-   SDL_RenderClear(surface->ren);
-   SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
-   SDL_DestroyTexture(tex);
+   SDL_UpdateWindowSurface(surface->window);
    
    // Render layer2 (text)
    
-   rect_dest.x = rect_source.w - NB_COL * CHAR_PIX_W;
-   rect_dest.y = rect_source.h - NB_ROW * CHAR_PIX_H;
-   rect_source.x = rect_source.y = 0;
-   rect_source.w = rect_dest.w = NB_COL * CHAR_PIX_W;
-   rect_source.h = rect_dest.h = NB_ROW * CHAR_PIX_H;
-   tex = SDL_CreateTextureFromSurface(surface->ren, surface->text_layer);
-   SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
    
    // affiche le tout à l'image
-   SDL_RenderPresent(surface->ren);
+   //SDL_RenderPresent(surface->ren);
 }
 
 bool gfx_lock(SURFACE *surface){
-   OSSpinLockLock(&(surface->lock));
+   SDL_LockSurface(surface->image);
    return true;
 }
 
 void gfx_unlock(SURFACE *surface){
-   OSSpinLockUnlock(&(surface->lock));
-   //(*surface)->lock = OS_SPINLOCK_INIT;
+   SDL_UnlockSurface(surface->image);
 }
 
 /**
@@ -150,7 +134,9 @@ void gfx_close() {
 }
 
 void * thread_render_present(void * surface){
-   SURFACE* s = surface;
+   SURFACE* s = (SURFACE*)surface;
+   //*s = gfx_init("MandelBrot", WIDTH, HEIGHT);
+   initiated = 1;
    while (1) {
       usleep(40000);  // Check every 0.1 sec. (10 Hz)
       gfx_lock(s);

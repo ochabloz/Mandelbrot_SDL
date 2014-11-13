@@ -16,8 +16,8 @@
 #include "spinlock.h"
 #define DEPTH 32
 // Size of the window
-#define WIDTH  1920//(5760)//1600//2880
-#define HEIGHT 1080//(3600)//900//1800
+#define WIDTH  1024//(5760)//1600//2880
+#define HEIGHT 768//(3600)//900//1800
 
 
 // Macros to pack and unpack color components.
@@ -26,18 +26,20 @@
 #define COLOR_GET_G(col) ((col & 0xFF00)>>8)
 #define COLOR_GET_R(col) ((col & 0xFF0000)>>16)
 
+extern int initiated;
+
 typedef Uint32 uint32;
 typedef Uint8 uint8;
 typedef struct SURFACE SURFACE;
 
 struct SURFACE{
-   SDL_Surface * image, * text_layer;
+   SDL_Surface * image, * text_layer, * ecran;
    SDL_Window * window;
    SDL_Renderer * ren;
    SPINLOCK_T lock;
 };
 
-SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow);
+void creer_fenetre(int x, int y, char * title, SDL_Window** pWindow);
 extern SURFACE *gfx_init(char *title, int width, int height);
 
 

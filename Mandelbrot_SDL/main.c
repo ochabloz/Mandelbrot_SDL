@@ -27,9 +27,17 @@ int main(int argc, char **argv) {
    
    colormap_t colmap;
    create_colormap(&colmap);
-   
+   pthread_t  thread_refresh, mandel_t;
    // Rendering surface
-   SURFACE *surface = gfx_init("Mandelbrot", WIDTH, HEIGHT);
+   
+   
+   SURFACE *surface = gfx_init("MandelBrot", WIDTH, HEIGHT);
+   
+   
+   pthread_create(&thread_refresh, NULL, thread_render_present, surface);
+   
+   while (initiated == 0);
+   
    if (surface == NULL) {
       fprintf(stderr, "Failed initializing video mode!\n");
       return EXIT_FAILURE;
@@ -94,11 +102,15 @@ int main(int argc, char **argv) {
    i.d = surface;
    i.c = &colmap;
    
-   pthread_t  thread_refresh;
+   
    clock_t start, end;
    start = clock();
-   pthread_create(&thread_refresh, NULL,thread_render_present ,surface);
-   Mandelbrot((void*)&i);
+   pthread_create(&mandel_t, NULL,Mandelbrot ,&i);
+   
+   while (!gfx_is_esc_pressed()) {
+      gfx_present(surface);
+   }
+   
    end = clock();
    end = end-start;
    double elapsed = end / (double)CLOCKS_PER_SEC;

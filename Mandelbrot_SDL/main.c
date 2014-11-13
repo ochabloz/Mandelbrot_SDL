@@ -27,6 +27,7 @@
  */
 int main(int argc, char **argv) {
    int i;
+   int esc_has_been_pressed = 0;
    colormap_t colmap;
    create_colormap(&colmap);
    int nthread = 0;

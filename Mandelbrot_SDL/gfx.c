@@ -59,7 +59,7 @@ uint32 gfx_getpix(SURFACE *surface, int x, int y) {
  */
 SURFACE *gfx_init(char *title, int width, int height) {
    SURFACE * image = malloc(sizeof(SURFACE));
-   image->lock = OS_SPINLOCK_INIT;
+   image->lock = INIT_SPINLOCK;
    if (SDL_Init(SDL_INIT_VIDEO) == -1) {
       printf("Unable to initialize SDL!\n");
       
@@ -70,7 +70,7 @@ SURFACE *gfx_init(char *title, int width, int height) {
    
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
    image->text_layer = SDL_CreateRGBSurface(0, NB_COL * CHAR_PIX_W, NB_ROW * CHAR_PIX_H, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
-   image->lock = OS_SPINLOCK_INIT;
+   image->lock = INIT_SPINLOCK;
    
    return image;
 }
@@ -133,12 +133,12 @@ void gfx_present(SURFACE *surface) {
 }
 
 bool gfx_lock(SURFACE *surface){
-   OSSpinLockLock(&(surface->lock));
+   lock_spin(&(surface->lock));
    return true;
 }
 
 void gfx_unlock(SURFACE *surface){
-   OSSpinLockUnlock(&(surface->lock));
+   unlock_spin(&(surface->lock));
    //(*surface)->lock = OS_SPINLOCK_INIT;
 }
 

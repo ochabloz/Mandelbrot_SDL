@@ -12,12 +12,17 @@
 #include <pthread.h>
 #ifdef __APPLE__
 #include <libkern/OSAtomic.h>
+#define INIT_SPINLOCK OS_SPINLOCK_INIT
 #define SPINLOCK_T OSSpinLock
 #define lock_spin(x) OSSpinLockLock(x)
 #define unlock_spin(x) OSSpinLockUnlock(x)
 #define trylock_spin(x) OSSpinLockTry(x)
 #else
+#define INIT_SPINLOCK 0
 #define SPINLOCK_T pthread_spinlock_t
+#define lock_spin(x) pthread_spin_lock(x)
+#define unlock_spin(x) pthread_spin_unlock(x)
+#define trylock_spin(x) pthread_spin_trylock(
 #endif
 
 

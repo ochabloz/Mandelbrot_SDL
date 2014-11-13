@@ -11,6 +11,7 @@
 
 #include "gfx.h"
 #include "spinlock.h"
+#include <pthread.h>include
 
 typedef struct Pile_t Pile_t;
 typedef struct Pile_elem Pile_elem;

@@ -35,23 +35,6 @@ int main(int argc, char **argv) {
       return EXIT_FAILURE;
    }
    
-   
-    // Classic coordinates
-    params_t o = {
-    -0.65,
-    -0.0,
-    1.2,
-    150,
-    10 };
-   
-   
-   
-  //pthread_create(thread_refresh, NULL, thread_render_present, (void*)surface);
-   
-   //mandelbrot(surface, &colmap, WIDTH, HEIGHT, &p);
-   
-   
-   
    params_t parametres[3] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
       {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
       {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }}; //good one
@@ -64,11 +47,16 @@ int main(int argc, char **argv) {
    i.d = surface;
    i.c = &colmap;
    
-   pthread_t  thread_refresh;
+   pthread_t  thread_refresh, mandela;
    clock_t start, end;
    start = clock();
-   pthread_create(&thread_refresh, NULL,thread_render_present ,surface);
-   Mandelbrot((void*)&i);
+   pthread_create(&mandela, NULL,Mandelbrot ,&i);
+
+   while (!gfx_is_esc_pressed()) {
+      usleep(40000);
+      gfx_present(surface);
+   }
+   
    end = clock();
    end = end-start;
    double elapsed = end / (double)CLOCKS_PER_SEC;

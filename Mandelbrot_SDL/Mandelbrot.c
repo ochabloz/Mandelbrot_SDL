@@ -184,8 +184,5 @@ void *Mandelbrot(void *arg)
          break;
       }
    }
-
-   
-   
    return NULL;
 }

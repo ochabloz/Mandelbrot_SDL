@@ -15,7 +15,7 @@
 #include "stack.h"
 #include <time.h>
 
-#define PARAM_NUM 2
+#define PARAM_NUM 4
 #define NB_BLOCKS 150
 #define NB_THREAD 10
 
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
       }
       else if (!strncmp("--nbloc=",argv[argi],strlen("--nbloc=")))
       {
-         nbloc = atoi(&argv[argi][strlen("--nbloc=]")]);
+         nbloc = atoi(&argv[argi][strlen("--nbloc=")]);
       }
       else if(!strncmp("--height=",argv[argi],strlen("--height=")))
       {
@@ -83,7 +83,9 @@ int main(int argc, char **argv) {
    
    params_t parametres[] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
       {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
-      {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }}; //good one
+      {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }, //good one
+      {0.35617945095070000, -0.6588216757098951155, 1/3.0550268E8,70000000000000, 3.5},
+      {-1.278355973084,0.07390450051472 ,2.0/420.97435,1280,10}};
    
    pthread_t *mandelbrot_t = (pthread_t*) malloc(sizeof(pthread_t)*nthread);
    if(!mandelbrot_t)

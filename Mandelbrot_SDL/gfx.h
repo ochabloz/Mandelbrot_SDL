@@ -16,8 +16,8 @@
 #include "spinlock.h"
 #define DEPTH 32
 // Size of the window
-#define WIDTH  600//(5760)//1600//2880
-#define HEIGHT 400//(3600)//900//1800
+#define WIDTH  1280//(5760)//1600//2880
+#define HEIGHT 768//(3600)//900//1800
 
 
 // Macros to pack and unpack color components.

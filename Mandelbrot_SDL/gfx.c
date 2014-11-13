@@ -139,7 +139,6 @@ bool gfx_lock(SURFACE *surface){
 
 void gfx_unlock(SURFACE *surface){
    OSSpinLockUnlock(&(surface->lock));
-   //(*surface)->lock = OS_SPINLOCK_INIT;
 }
 
 /**

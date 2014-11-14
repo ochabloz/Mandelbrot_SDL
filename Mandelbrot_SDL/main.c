@@ -7,6 +7,9 @@
  */
 
 #define _GNU_SOURCE
+
+
+typedef unsigned int uint;
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -110,9 +113,10 @@ int main(int argc, char **argv) {
    for (i = 0; i < nthread; i++) {
       pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info);
    }
-   
-   bool a = true;
-   while ((!gfx_is_esc_pressed())&&a ) {
+   pthread_t refresher;
+   pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed);
+
+   while (!esc_has_been_pressed) {
       usleep(40000);
       gfx_present(surface);
    }

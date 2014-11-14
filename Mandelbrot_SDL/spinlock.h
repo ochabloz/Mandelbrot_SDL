@@ -9,6 +9,7 @@
 #ifndef __Mandelbrot_SDL__spinlock__
 #define __Mandelbrot_SDL__spinlock__
 
+#define __USE_XOPEN2K
 #include <pthread.h>
 #ifdef __APPLE__
 #include <libkern/OSAtomic.h>

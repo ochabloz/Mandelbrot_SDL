@@ -48,7 +48,7 @@ typedef struct
 }info_mandelbrot_thread;
 
 
-void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, params_t *p);
+void mandelbrot(SURFACE *surface, colormap_t *colmap, unsigned int width, unsigned int height, params_t *p);
 void create_colormap(colormap_t *colmap);
 void free_colormap(colormap_t *colmap);
 void *Mandelbrot(void *arg);

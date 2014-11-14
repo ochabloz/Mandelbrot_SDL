@@ -48,7 +48,7 @@ void free_colormap(colormap_t *colmap) {
 /**
  * Render the Mandelbrot setup.
  */
-void mandelbrot(SURFACE *surface, colormap_t *colmap, uint width, uint height, params_t *p) {
+void mandelbrot(SURFACE *surface, colormap_t *colmap, unsigned int width, unsigned int height, params_t *p) {
    double x1 =  p->xc - p->size;
    double x2 =  p->xc + p->size;
    double y1 =  p->yc - p->size;

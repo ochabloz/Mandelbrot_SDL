@@ -13,6 +13,10 @@
 #define CHAR_PIX_W 5
 #define CHAR_PIX_H 5
 
+
+
+int WIDTH = 1920;
+int HEIGHT = 1080;
 /**
  * Compute pixel address for coordinates (x,y).
  * @param surface for which to compute the position.

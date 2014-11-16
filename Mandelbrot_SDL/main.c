@@ -7,6 +7,9 @@
  */
 
 #define _GNU_SOURCE
+
+
+typedef unsigned int uint;
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
@@ -15,9 +18,9 @@
 #include "stack.h"
 #include <time.h>
 
-#define PARAM_NUM 2
+#define PARAM_NUM 4
 #define NB_BLOCKS 150
-#define NB_THREAD 4
+#define NB_THREAD 10
 
 /**
  * Program's entry point.
@@ -30,6 +33,50 @@ int main(int argc, char **argv) {
    int esc_has_been_pressed = 0;
    colormap_t colmap;
    create_colormap(&colmap);
+   int nthread = 0;
+   int nbloc = 0;
+   for(int argi = 1; argi < argc; argi++)
+   {
+      if(!strncmp("--help",argv[argi],strlen("--help")))
+      {
+         printf("MANDELBROT\n");
+         printf("compiled on " __TIMESTAMP__"\n");
+         printf("Olivier Chabloz, Balthazar de Moncuit, Alexis Marquet\n\n\n");
+         printf("Options:\n");
+         printf("--nthread=[ARG]  \t # of threads\n");
+         printf("--nblocs=[ARG]   \t # of blocs for the render (must be > nthread)\n");
+         printf("--height=[ARG]   \t height resolution (default = 1080)\n");
+         printf("--width=[ARG]    \t width resolution (default = 1920)\n");
+         printf("--img-path=[ARG] \t path to save image to. if not specified, no image will be rendered\n");
+         exit(0);
+      }
+      else if (!strncmp("--nthread=",argv[argi],strlen("--nthread=")))
+      {
+         nthread = atoi(&argv[argi][strlen("--nthread=")]);
+      }
+      else if (!strncmp("--nbloc=",argv[argi],strlen("--nbloc=")))
+      {
+         nbloc = atoi(&argv[argi][strlen("--nbloc=")]);
+      }
+      else if(!strncmp("--height=",argv[argi],strlen("--height=")))
+      {
+         HEIGHT= atoi(&argv[argi][strlen("--height=")]);
+      }
+      else if(!strncmp("--width=",argv[argi],strlen("--width=")))
+      {
+         WIDTH = atoi(&argv[argi][strlen("--width=")]);
+      }
+   }
+   if((nthread==0) || (nbloc ==0))
+   {
+      printf("ERROR : please enter valid nthread & nbloc values. for help, option '--help'\n");
+      exit(1);
+   }
+   if(nthread > nbloc)
+   {
+      printf("ERROR : nthread must be < nbloc. for help, option '--help'\n");
+      exit(1);
+   }
    
    // Rendering surface
    SURFACE *surface = gfx_init("Mandelbrot", WIDTH, HEIGHT);
@@ -40,12 +87,19 @@ int main(int argc, char **argv) {
    
    params_t parametres[] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
       {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
-      {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }}; //good one
+      {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }, //good one
+      {0.35617945095070000, -0.6588216757098951155, 1/3.0550268E8,70000000000000, 3.5},
+      {-1.278355973084,0.07390450051472 ,2.0/420.97435,1280,10}};
    
-   pthread_t mandelbrot_t[NB_THREAD], refresher;
+   pthread_t *mandelbrot_t = (pthread_t*) malloc(sizeof(pthread_t)*nthread);
+   if(!mandelbrot_t)
+   {
+      fprintf(stderr, "error allocating memory for thread information\n");
+      exit(1);
+   }
    
    Pile_t *s;
-   create_stack_from_surface(surface,&s, NB_BLOCKS);
+   create_stack_from_surface(surface,&s, nbloc);
    info_mandelbrot_thread info;
    info.p = &parametres[PARAM_NUM];
    info.s = s;
@@ -56,9 +110,10 @@ int main(int argc, char **argv) {
    clock_t start, end;
    start = clock();
    
-   for (i = 0; i < NB_THREAD; i++) {
+   for (i = 0; i < nthread; i++) {
       pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info);
    }
+   pthread_t refresher;
    pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed);
 
    while (!esc_has_been_pressed) {

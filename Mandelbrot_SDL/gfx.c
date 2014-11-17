@@ -66,7 +66,7 @@ uint32 gfx_getpix(SURFACE *surface, int x, int y) {
  */
 SURFACE *gfx_init(char *title, int width, int height) {
    SURFACE * image = malloc(sizeof(SURFACE));
-   image->lock = INIT_SPINLOCK;
+   image->lock = INIT_SPINLOCK(&(image->lock),0);
    if (SDL_Init(SDL_INIT_VIDEO) == -1) {
       printf("Unable to initialize SDL!\n");
       
@@ -145,8 +145,9 @@ void gfx_unlock(SURFACE *surface){
 /**
  * Close the graphic mode.
  */
-void gfx_close() {
+void gfx_close(SURFACE * surface) {
    SDL_Quit();
+   free(surface);
 }
 
 void * thread_render_present(void * surface){

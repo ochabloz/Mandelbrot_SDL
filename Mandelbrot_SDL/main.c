@@ -119,7 +119,11 @@ int main(int argc, char **argv) {
    start = clock();
    
    for (i = 0; i < nthread; i++) {
-      pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info);
+      if(pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info) != 0)
+      {
+         fprintf(stderr, "error creating the threads\n");
+         exit(1);
+      }
    }
    pthread_t refresher;
    pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed);
@@ -147,5 +151,6 @@ int main(int argc, char **argv) {
    
    free_colormap(&colmap);
    free(str);
+   free (mandelbrot_t);
    return EXIT_SUCCESS;
 }

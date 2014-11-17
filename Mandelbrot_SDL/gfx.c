@@ -149,8 +149,9 @@ void gfx_unlock(SURFACE *surface){
 /**
  * Close the graphic mode.
  */
-void gfx_close() {
+void gfx_close(SURFACE * surface) {
    SDL_Quit();
+   free(surface);
 }
 
 void * thread_render_present(void * surface){

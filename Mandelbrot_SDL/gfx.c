@@ -80,7 +80,7 @@ SURFACE *gfx_init(char *title, int width, int height) {
    SDL_Surface * font = SDL_LoadBMP("font.bmp");
    image->text_layer = SDL_CreateTextureFromSurface(image->ren, font);
    SDL_FreeSurface(font);
-   image->lock = INIT_SPINLOCK;
+   image->lock = INIT_SPINLOCK(0,0);
    
    return image;
 }

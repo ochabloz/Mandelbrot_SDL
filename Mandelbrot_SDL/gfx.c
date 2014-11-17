@@ -7,12 +7,15 @@
  */
 
 #include "gfx.h"
+#include <string.h>
 
 #define NB_ROW 2
 #define NB_COL 20
-#define CHAR_PIX_W 5
-#define CHAR_PIX_H 5
-
+#define CHAR_PIX_W 7
+#define CHAR_PIX_H 9
+#define ZOOM 3
+#define F_PADDING 7
+#define F_PADD_X 1
 
 
 int WIDTH = 1920;
@@ -69,11 +72,14 @@ SURFACE *gfx_init(char *title, int width, int height) {
       
       return NULL;
    }
-   //SURFACE * image = malloc(sizeof(SURFACE));
    image->ren = creer_fenetre(width, height, title, &(image->window));
-   
+   image->string = malloc(sizeof(char));
+   for (int i = 0; i < NB_COL * NB_ROW ; i++)
+      image->string[i] = '\0';
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
-   image->text_layer = SDL_CreateRGBSurface(0, NB_COL * CHAR_PIX_W, NB_ROW * CHAR_PIX_H, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
+   SDL_Surface * font = SDL_LoadBMP("font.bmp");
+   image->text_layer = SDL_CreateTextureFromSurface(image->ren, font);
+   SDL_FreeSurface(font);
    image->lock = INIT_SPINLOCK;
    
    return image;
@@ -110,27 +116,17 @@ bool gfx_is_esc_pressed() {
  * @param surface to present.
  */
 void gfx_present(SURFACE *surface) {
+   int pos_str = 0;
    SDL_Texture * tex = SDL_CreateTextureFromSurface(surface->ren, surface->image);
    
-   SDL_Rect rect_source, rect_dest;
-   rect_source.x = rect_source.y = rect_dest.y = rect_dest.x   = 0;
-   SDL_GetWindowSize(surface->window, &(rect_source.w), &(rect_source.h));
-   rect_dest.h = rect_source.h;
-   rect_dest.w = rect_source.w;
-   
    SDL_RenderClear(surface->ren);
-   SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
+   SDL_RenderCopy(surface->ren, tex, NULL, NULL);
    SDL_DestroyTexture(tex);
    
-   // Render layer2 (text)
-   
-   rect_dest.x = rect_source.w - NB_COL * CHAR_PIX_W;
-   rect_dest.y = rect_source.h - NB_ROW * CHAR_PIX_H;
-   rect_source.x = rect_source.y = 0;
-   rect_source.w = rect_dest.w = NB_COL * CHAR_PIX_W;
-   rect_source.h = rect_dest.h = NB_ROW * CHAR_PIX_H;
-   tex = SDL_CreateTextureFromSurface(surface->ren, surface->text_layer);
-   SDL_RenderCopy(surface->ren, tex, &rect_source, &rect_dest);
+   while (surface->string[pos_str] != '\0') {
+      write_char_to_pos(surface->string[pos_str], pos_str, surface);
+      pos_str++;
+   }
    
    // affiche le tout à l'image
    SDL_RenderPresent(surface->ren);
@@ -174,7 +170,43 @@ void * thread_is_escaped(void * esc_pressed){
 
 
 void write_char_to_pos(char c, int pos, SURFACE * surface){
-   SDL_Surface * font = SDL_LoadBMP("font.bmp");
-   surface->text_layer = font;
+   SDL_Rect rect_source, rect_dest;
+   if (c >= 'A' && c <='Z') {
+      rect_source.y = F_PADDING;
+      rect_source.x =  (c - 'A') * CHAR_PIX_W + (c - 'A') * F_PADD_X;
+   }
+   else if (c >= 'a' && c <='z') {
+      rect_source.y = (2 * F_PADDING) + CHAR_PIX_H;
+      rect_source.x =  (c - 'a') * CHAR_PIX_W + (c - 'a') * F_PADD_X;
+   }
+   else if (c >= '0' && c <='9') {
+      rect_source.y = (3 * F_PADDING) + 2 * CHAR_PIX_H;
+      rect_source.x =  (c - '0') * CHAR_PIX_W + (c - '0') * F_PADD_X;
+   }
+   else if (c == '%') {
+      rect_source.y = (4 * F_PADDING) + 3 * CHAR_PIX_H;
+      rect_source.x =  4 * CHAR_PIX_W + 4 * F_PADD_X;
+   }
+   else if (c == '.') {
+      rect_source.y = (3 * F_PADDING) + 2 * CHAR_PIX_H;
+      rect_source.x =  10 * CHAR_PIX_W + 10 * F_PADD_X;
+   }
+   else{
+      rect_source.y = F_PADDING;
+      rect_source.x =  ('Z' - 'A' + 1) * CHAR_PIX_W + ('Z' - 'A' + 1) * F_PADD_X;
+   }
    
+   rect_dest.x = (((pos % NB_COL) * CHAR_PIX_W) % (NB_COL * CHAR_PIX_W)) * ZOOM;
+   rect_dest.y = (pos / NB_COL) * CHAR_PIX_H * ZOOM;
+   
+   rect_source.w = CHAR_PIX_W;
+   rect_dest.w = CHAR_PIX_W * ZOOM;
+   rect_source.h = CHAR_PIX_H;
+   rect_dest.h = CHAR_PIX_H * ZOOM;
+   
+   SDL_RenderCopy(surface->ren, surface->text_layer, &rect_source, &rect_dest);
+}
+
+void gfx_print(char * string, SURFACE * surface){
+   strcpy(surface->string, string);
 }

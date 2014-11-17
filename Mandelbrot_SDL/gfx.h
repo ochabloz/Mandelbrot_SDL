@@ -32,9 +32,11 @@ typedef Uint8 uint8;
 typedef struct SURFACE SURFACE;
 
 struct SURFACE{
-   SDL_Surface * image, * text_layer;
+   SDL_Surface * image;
+   SDL_Texture * text_layer;
    SDL_Window * window;
    SDL_Renderer * ren;
+   char * string;
    SPINLOCK_T lock;
 };
 
@@ -54,6 +56,6 @@ extern void gfx_close();
 void * thread_render_present(void * surface);
 void * thread_is_escaped(void * esc_pressed);
 // Text fonction
-extern void gfx_write_str(char *);
 void write_char_to_pos(char c, int pos, SURFACE * surface);
+void gfx_print(char * string, SURFACE * surface);
 #endif

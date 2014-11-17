@@ -106,10 +106,9 @@ int main(int argc, char **argv) {
    info.d = surface;
    info.c = &colmap;
    
-   write_char_to_pos('a', 10, surface);
    clock_t start, end;
    start = clock();
-   
+   gfx_print("100% in 12.3413 sec.", surface);
    for (i = 0; i < nthread; i++) {
       pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info);
    }

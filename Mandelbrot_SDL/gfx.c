@@ -78,6 +78,8 @@ SURFACE *gfx_init(char *title, int width, int height) {
       image->string[i] = '\0';
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
    SDL_Surface * font = SDL_LoadBMP("font.bmp");
+   if (font == NULL)
+      printf("Warning, font.bmp hasn't been found!\n");
    image->text_layer = SDL_CreateTextureFromSurface(image->ren, font);
    SDL_FreeSurface(font);
    image->lock = INIT_SPINLOCK(0,0);

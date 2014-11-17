@@ -18,9 +18,7 @@ typedef unsigned int uint;
 #include "stack.h"
 #include <time.h>
 
-#define PARAM_NUM 4
-#define NB_BLOCKS 150
-#define NB_THREAD 10
+
 
 /**
  * Program's entry point.
@@ -35,6 +33,14 @@ int main(int argc, char **argv) {
    create_colormap(&colmap);
    int nthread = 0;
    int nbloc = 0;
+   int profile = 0;
+   params_t parametres[] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
+      {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
+      {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }, //good one
+      {0.35617945095070000, -0.6588216757098951155, 1/3.0550268E8,70000000000000, 3.5},
+      {-1.278355973084,0.07390450051472 ,2.0/420.97435,1280,10}};
+   
+   
    for(int argi = 1; argi < argc; argi++)
    {
       if(!strncmp("--help",argv[argi],strlen("--help")))
@@ -48,6 +54,7 @@ int main(int argc, char **argv) {
          printf("--height=[ARG]   \t height resolution (default = 1080)\n");
          printf("--width=[ARG]    \t width resolution (default = 1920)\n");
          printf("--img-path=[ARG] \t path to save image to. if not specified, no image will be rendered\n");
+         printf("--profile=[ARG]  \t profile to render (internal, 1 to %lu)\n",sizeof(parametres)/sizeof(params_t));
          exit(0);
       }
       else if (!strncmp("--nthread=",argv[argi],strlen("--nthread=")))
@@ -66,15 +73,20 @@ int main(int argc, char **argv) {
       {
          WIDTH = atoi(&argv[argi][strlen("--width=")]);
       }
+      else if(!strncmp("--profile=",argv[argi],strlen("--profile=")))
+      {
+         profile = atoi(&argv[argi][strlen("--profile=")]);
+         profile -= 1;
+      }
    }
    if((nthread==0) || (nbloc ==0))
    {
-      printf("ERROR : please enter valid nthread & nbloc values. for help, option '--help'\n");
+      fprintf(stderr,"ERROR : please enter valid nthread & nbloc values. for help, option '--help'\n");
       exit(1);
    }
    if(nthread > nbloc)
    {
-      printf("ERROR : nthread must be < nbloc. for help, option '--help'\n");
+      fprintf(stderr,"ERROR : nthread must be < nbloc. for help, option '--help'\n");
       exit(1);
    }
    
@@ -85,11 +97,7 @@ int main(int argc, char **argv) {
       return EXIT_FAILURE;
    }
    
-   params_t parametres[] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
-      {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
-      {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }, //good one
-      {0.35617945095070000, -0.6588216757098951155, 1/3.0550268E8,70000000000000, 3.5},
-      {-1.278355973084,0.07390450051472 ,2.0/420.97435,1280,10}};
+
    
    pthread_t *mandelbrot_t = (pthread_t*) malloc(sizeof(pthread_t)*nthread);
    if(!mandelbrot_t)
@@ -101,7 +109,7 @@ int main(int argc, char **argv) {
    Pile_t *s;
    create_stack_from_surface(surface,&s, nbloc);
    info_mandelbrot_thread info;
-   info.p = &parametres[PARAM_NUM];
+   info.p = &parametres[profile];
    info.s = s;
    info.d = surface;
    info.c = &colmap;
@@ -127,11 +135,11 @@ int main(int argc, char **argv) {
    printf("elapsed = %lf s\n",elapsed);
    char*str = malloc(3000);
    sprintf(str,"mandelbrot" __DATE__" "__TIME__ " %lE %lE %lE %ld %lE en %lf s.bmp",
-           parametres[PARAM_NUM].xc,
-           parametres[PARAM_NUM].yc,
-           parametres[PARAM_NUM].size,
-           parametres[PARAM_NUM].max_iter,
-           parametres[PARAM_NUM].dcol,
+           parametres[profile].xc,
+           parametres[profile].yc,
+           parametres[profile].size,
+           parametres[profile].max_iter,
+           parametres[profile].dcol,
            elapsed);
    int res = SDL_SaveBMP(surface->image,str);
    printf("%d res\n",res);

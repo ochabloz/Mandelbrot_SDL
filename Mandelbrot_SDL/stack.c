@@ -44,7 +44,7 @@ void create_stack(Pile_t** stack){
    *stack = malloc(sizeof(Pile_t));
    (*stack)->nb_elements = 0;
    (*stack)->suivant = NULL;
-   (*stack)->lock = INIT_SPINLOCK; // TODO : Corriger cela pour la version linux
+   (*stack)->lock = INIT_SPINLOCK(&(*stack)->lock,0); // TODO : Corriger cela pour la version linux
 }
 
 void lock_stack(Pile_t* p){

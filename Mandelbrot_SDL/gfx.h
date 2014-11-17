@@ -55,4 +55,5 @@ void * thread_render_present(void * surface);
 void * thread_is_escaped(void * esc_pressed);
 // Text fonction
 extern void gfx_write_str(char *);
+void write_char_to_pos(char c, int pos, SURFACE * surface);
 #endif

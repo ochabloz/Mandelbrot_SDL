@@ -175,5 +175,6 @@ void * thread_is_escaped(void * esc_pressed){
 
 void write_char_to_pos(char c, int pos, SURFACE * surface){
    SDL_Surface * font = SDL_LoadBMP("font.bmp");
+   surface->text_layer = font;
    
 }

@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
    info.d = surface;
    info.c = &colmap;
    
-
+   write_char_to_pos('a', 10, surface);
    clock_t start, end;
    start = clock();
    

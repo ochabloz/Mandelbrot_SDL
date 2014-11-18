@@ -121,12 +121,15 @@ int main(int argc, char **argv) {
    for (i = 0; i < nthread; i++) {
       if(pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info) != 0)
       {
-         fprintf(stderr, "error creating the threads\n");
+         fprintf(stderr, "error creating mandelbrot threads\n");
          exit(1);
       }
    }
    pthread_t refresher;
-   pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed);
+   if(pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed) != 0)
+   {
+      fprintf(stderr, "error creating refresh thread\n");
+   }
 
    while (!esc_has_been_pressed) {
       usleep(40000);

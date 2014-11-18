@@ -66,6 +66,11 @@ uint32 gfx_getpix(SURFACE *surface, int x, int y) {
  */
 SURFACE *gfx_init(char *title, int width, int height) {
    SURFACE * image = malloc(sizeof(SURFACE));
+   if(!image)
+   {
+      fprintf(stderr,"error allocating SRUFACE memory\n");
+      exit(1);
+   }
    image->lock = INIT_SPINLOCK(&(image->lock),0);
    if (SDL_Init(SDL_INIT_VIDEO) == -1) {
       printf("Unable to initialize SDL!\n");
@@ -74,6 +79,11 @@ SURFACE *gfx_init(char *title, int width, int height) {
    }
    image->ren = creer_fenetre(width, height, title, &(image->window));
    image->string = malloc(sizeof(char));
+   if(!image->string)
+   {
+      fprintf(stderr,"error allocating string memory for status\n");
+      exit(1);
+   }
    for (int i = 0; i < NB_COL * NB_ROW ; i++)
       image->string[i] = '\0';
    image->image = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0);
@@ -149,7 +159,7 @@ void gfx_unlock(SURFACE *surface){
  */
 void gfx_close(SURFACE * surface) {
    SDL_Quit();
-   free(surface);
+   //free(surface);
 }
 
 void * thread_render_present(void * surface){

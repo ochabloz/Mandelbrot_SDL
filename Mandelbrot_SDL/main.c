@@ -116,7 +116,8 @@ int main(int argc, char **argv) {
    
    clock_t start, end;
    start = clock();
-   gfx_print("100% in 12.3413 sec.", surface);
+   char *str_time = malloc(200);
+   //gfx_print("100% in 12.3413 sec.", surface);
    for (i = 0; i < nthread; i++) {
       if(pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info) != 0)
       {
@@ -129,6 +130,10 @@ int main(int argc, char **argv) {
 
    while (!esc_has_been_pressed) {
       usleep(40000);
+      end = clock();
+      end = end-start;
+      sprintf(str_time,"%f s.",end/(double)CLOCKS_PER_SEC);
+      gfx_print(str_time,surface);
       gfx_present(surface);
    }
    

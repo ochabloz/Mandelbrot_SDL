@@ -27,13 +27,15 @@ typedef unsigned int uint;
  * @return status code.
  */
 int main(int argc, char **argv) {
-   int i;
    int esc_has_been_pressed = 0;
    colormap_t colmap;
    create_colormap(&colmap);
    int nthread = 0;
    int nbloc = 0;
-   int profile = 0;
+   int profile = 0; // the cell of parametres array
+   
+   // Array of differents parameters to render
+   //
    params_t parametres[] = {{ -0.65, -0.0, 1.2, 150, 10 }, // Classic coordinates
       {0.2929859127507, 0.6117848324958, 1.0E-12, 4000, 0.9 }, // Mandelbrot computation parameters
       {-0.17476469999956, -1.0713151001, 5.095053e-10, 20000, 0.9 }, //good one
@@ -41,8 +43,13 @@ int main(int argc, char **argv) {
       {-1.278355973084,0.07390450051472 ,2.0/420.97435,1280,10}};
    
    
+   // Arguments processing
+   //
    for(int argi = 1; argi < argc; argi++)
    {
+      // if argument "--help" :
+      // print all the options available and then exit the program
+      //
       if(!strncmp("--help",argv[argi],strlen("--help")))
       {
          printf("MANDELBROT\n");
@@ -78,27 +85,33 @@ int main(int argc, char **argv) {
          profile = atoi(&argv[argi][strlen("--profile=")]);
          profile -= 1;
       }
-   }
+   } // end of Argument processing
+   
+   // EXIT if no '--nbloc' and no '--nthread' were entered
+   //
    if((nthread==0) || (nbloc ==0))
    {
       fprintf(stderr,"ERROR : please enter valid nthread & nbloc values. for help, option '--help'\n");
       exit(1);
    }
+   
+   // EXIT if the number of thread is greater than the number of blocs.
    if(nthread > nbloc)
    {
       fprintf(stderr,"ERROR : nthread must be < nbloc. for help, option '--help'\n");
       exit(1);
    }
    
-   // Rendering surface
+   // Allocating SURFACE and Initiate SDL2. EXIT on Failure
+   //
    SURFACE *surface = gfx_init("Mandelbrot", WIDTH, HEIGHT);
    if (surface == NULL) {
       fprintf(stderr, "Failed initializing video mode!\n");
       return EXIT_FAILURE;
    }
    
-
-   
+   // Allocating an array of pthread_t. EXIT on Failure
+   //
    pthread_t *mandelbrot_t = (pthread_t*) malloc(sizeof(pthread_t)*nthread);
    if(!mandelbrot_t)
    {
@@ -118,7 +131,7 @@ int main(int argc, char **argv) {
    start = clock();
    char *str_time = malloc(200);
    //gfx_print("100% in 12.3413 sec.", surface);
-   for (i = 0; i < nthread; i++) {
+   for (int i = 0; i < nthread; i++) {
       if(pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info) != 0)
       {
          fprintf(stderr, "error creating mandelbrot threads\n");

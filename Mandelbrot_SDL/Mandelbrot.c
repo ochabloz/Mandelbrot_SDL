@@ -102,10 +102,8 @@ void *Mandelbrot(void *arg)
    info_mandelbrot_thread *info = (info_mandelbrot_thread*)arg;
    bloc_t *actual;
    params_t p;
-   //lock_spin(&(info->lock));
    memcpy(&p,info->p,sizeof(params_t)-sizeof(SPINLOCK_T));
-   //unlock_spin(&(info->lock));
-   //unlock info->p
+
    while(1)
    {
       //lock pile

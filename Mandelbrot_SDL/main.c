@@ -116,19 +116,27 @@ int main(int argc, char **argv) {
    
    clock_t start, end;
    start = clock();
-   gfx_print("100% in 12.3413 sec.", surface);
+   char *str_time = malloc(200);
+   //gfx_print("100% in 12.3413 sec.", surface);
    for (i = 0; i < nthread; i++) {
       if(pthread_create(&mandelbrot_t[i], NULL,Mandelbrot ,&info) != 0)
       {
-         fprintf(stderr, "error creating the threads\n");
+         fprintf(stderr, "error creating mandelbrot threads\n");
          exit(1);
       }
    }
    pthread_t refresher;
-   pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed);
+   if(pthread_create(&refresher, NULL, thread_is_escaped, &esc_has_been_pressed) != 0)
+   {
+      fprintf(stderr, "error creating refresh thread\n");
+   }
 
    while (!esc_has_been_pressed) {
       usleep(40000);
+      end = clock();
+      end = end-start;
+      sprintf(str_time,"%f s.",end/(double)CLOCKS_PER_SEC);
+      gfx_print(str_time,surface);
       gfx_present(surface);
    }
    

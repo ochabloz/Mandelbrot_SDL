@@ -16,6 +16,11 @@
 
 void push_stack(Pile_t* p, void* bloc){
    Pile_elem * new_item = malloc(sizeof(Pile_elem));
+   if(!new_item)
+   {
+      fprintf(stderr, "error allocating memory for stack element\n");
+      exit(1);
+   }
    new_item->element = bloc;
    new_item->suivant = p->suivant;
    p->suivant = new_item;
@@ -42,6 +47,11 @@ int is_stack_empty(Pile_t* p){
 }
 void create_stack(Pile_t** stack){
    *stack = malloc(sizeof(Pile_t));
+   if(!(*stack))
+   {
+      fprintf(stderr, "error allocating stack memory\n");
+      exit(1);
+   }
    (*stack)->nb_elements = 0;
    (*stack)->suivant = NULL;
    (*stack)->lock = INIT_SPINLOCK(&(*stack)->lock,0); // TODO : Corriger cela pour la version linux
@@ -75,6 +85,11 @@ void create_stack_from_surface(SURFACE * s, Pile_t** stack, Uint32 nb_blocs){
    for (int i = 0; i < nb_blocs; i++) {
       range = (nb_pixel - sum)/(nb_blocs-i);
       bloc_temp = malloc(sizeof(bloc_t));
+      if(!bloc_temp)
+      {
+         fprintf(stderr, "error allocating memory for bloc (in create_stack_from_surface\n");
+         exit(1);
+      }
       bloc_temp->n = range;
       bloc_temp->s = s->image->pixels + sum * s->image->pitch / (DEPTH / 8);
       bloc_temp->index = sum;

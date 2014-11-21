@@ -15,29 +15,35 @@
 #include "spinlock.h"
 
 void push_stack(Pile_t* p, void* bloc){
+   // create an internal element
    Pile_elem * new_item = malloc(sizeof(Pile_elem));
    if(!new_item)
    {
       fprintf(stderr, "error allocating memory for stack element\n");
       exit(1);
    }
+   // store generic bloc into the newly created Pile_elem
    new_item->element = bloc;
+   // Push
    new_item->suivant = p->suivant;
    p->suivant = new_item;
+   
    p->nb_elements++;
 }
 
 void pop_stack(Pile_t* p, void** bloc){
    Pile_elem * to_trash;
    if (!is_stack_empty(p)) {
-      *bloc = (p->suivant->element);   //corrected
+      *bloc = (p->suivant->element); // return bloc
 
       to_trash = p->suivant;
+      
+      // promote the 2nd element to 1st position
       if (p->nb_elements > 1)
          p->suivant = p->suivant->suivant;
       else p->suivant = NULL;
       p->nb_elements--;
-      free(to_trash);
+      free(to_trash); // free old 1st elem
    }
    else *bloc = NULL;
 }
@@ -45,6 +51,7 @@ void pop_stack(Pile_t* p, void** bloc){
 int is_stack_empty(Pile_t* p){
    return p->nb_elements <= 0;
 }
+
 void create_stack(Pile_t** stack){
    *stack = malloc(sizeof(Pile_t));
    if(!(*stack))
@@ -54,7 +61,7 @@ void create_stack(Pile_t** stack){
    }
    (*stack)->nb_elements = 0;
    (*stack)->suivant = NULL;
-   (*stack)->lock = INIT_SPINLOCK(&(*stack)->lock,0); // TODO : Corriger cela pour la version linux
+   (*stack)->lock = INIT_SPINLOCK(&(*stack)->lock,0);
 }
 
 void lock_stack(Pile_t* p){
@@ -75,12 +82,11 @@ void free_stack(Pile_t** stack){
 }
 
 void create_stack_from_surface(SURFACE * s, Pile_t** stack, Uint32 nb_blocs){
-   //int width, height;
+
    Uint32 range, sum = 0, nb_pixel;
    bloc_t *bloc_temp = NULL;
    create_stack(stack);
    
-   //SDL_GetWindowSize(s->window, &width, &height);
    nb_pixel = WIDTH * HEIGHT;
    for (int i = 0; i < nb_blocs; i++) {
       range = (nb_pixel - sum)/(nb_blocs-i);

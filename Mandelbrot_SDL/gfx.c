@@ -205,7 +205,7 @@ void * thread_is_escaped(void * esc_pressed){
    return NULL;
 }
 
-
+//Write a char on the top left of the screen. font.bmp is model. "pos" goes from 0 to 40.
 void write_char_to_pos(char c, int pos, SURFACE * surface){
    SDL_Rect rect_source, rect_dest;
    if (c >= 'A' && c <='Z') {

@@ -39,7 +39,7 @@ struct SURFACE{
    SPINLOCK_T lock;
 };
 
-SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow);
+//SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow);
 extern SURFACE *gfx_init(char *title, int width, int height);
 
 

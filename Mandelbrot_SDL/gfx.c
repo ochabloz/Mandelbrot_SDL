@@ -185,7 +185,10 @@ void gfx_close(SURFACE * surface) {
    SDL_Quit();
    //free(surface);
 }
-
+/**
+ * The gfx_present function but designed to be threaded
+ * @param surface The surface to be presented
+ */
 void * thread_render_present(void * surface){
    SURFACE* s = surface;
    while (1) {
@@ -197,11 +200,11 @@ void * thread_render_present(void * surface){
    return NULL;
 }
 
+
 void * thread_is_escaped(void * esc_pressed){
    int * esc = (int*) esc_pressed;
    while (!gfx_is_esc_pressed())
       usleep(100000);
-   //*esc = 1;
    return NULL;
 }
 

@@ -191,13 +191,17 @@ void gfx_close(SURFACE * surface) {
 }
 
 pthread_barrier_t time_bar;
+/**
+ * The gfx_present function but designed to be threaded
+ * @param surface The surface to be presented
+ */
 void * thread_render_present(void * surface){
    SURFACE* s = surface;
    SPINLOCK_T lock = INIT_SPINLOCK(0,0);
    pthread_barrier_init(&time_bar,NULL,2);
    pthread_t t_time;
    pthread_create(&t_time,NULL,Thread_Time,(void*)&lock);
-   float *ticks;
+   double *ticks;
    char str[3000];
    pthread_barrier_wait(&time_bar);
    while (1) {
@@ -208,16 +212,18 @@ void * thread_render_present(void * surface){
       if(trylock_spin(&lock) == 0)
       {
          pthread_join(t_time,(void**)&ticks);
-         sprintf(str,"%f s",(*ticks));
+         sprintf(str,"%lf s",(*ticks));
          gfx_print(str,surface);
          gfx_present(surface);
          printf("rendered in %s\n",str);
          unlock_spin(&lock);
+         
          return NULL;
       }
    }
    return NULL;
 }
+
 
 pthread_barrier_t mandelbrot_bar;
 void *Thread_Time (void *arg)
@@ -230,10 +236,10 @@ void *Thread_Time (void *arg)
    clock_gettime(CLOCK_MONOTONIC,&start);
    pthread_barrier_wait(&mandelbrot_bar);
    clock_gettime(CLOCK_MONOTONIC,&end);
-   start = end-start;
-   float res = (end.tv_nsec -start.tv_nsec)/10.0E9;
+   double *res = malloc(sizeof(double));
+   *res = (end.tv_nsec -start.tv_nsec)/1000000000.0 +(end.tv_sec-start.tv_sec);
    unlock_spin(lock);
-   return &res;
+   return res;
 }
 void * thread_is_escaped(void * esc_pressed){
    int * esc = (int*) esc_pressed;

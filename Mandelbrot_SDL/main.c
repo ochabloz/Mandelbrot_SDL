@@ -202,3 +202,5 @@ void *Thread_Master(void *param)
    free (mandelbrot_t);
    return NULL;
 }
+
+

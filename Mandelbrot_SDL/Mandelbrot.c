@@ -135,13 +135,13 @@ void *Mandelbrot(void *arg)
          
          for(int k = 0; k < actual->n;k++)
          {
+            pthread_testcancel();
             i = (actual->index+k)%WIDTH;
             j = (actual->index+k)/WIDTH;
             if(j_prev != j)
             {
                x = x1;
                y += dy;
-               //gfx_present(info->d);
                j_prev = j;
             }
             double zx = 0,zy = 0;
@@ -182,5 +182,6 @@ void *Mandelbrot(void *arg)
          break;
       }
    }
+   pthread_barrier_wait(&bar_time);
    return NULL;
 }

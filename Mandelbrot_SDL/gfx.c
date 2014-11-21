@@ -176,8 +176,8 @@ void * thread_render_present(void * surface){
 void * thread_is_escaped(void * esc_pressed){
    int * esc = (int*) esc_pressed;
    while (!gfx_is_esc_pressed())
-      usleep(10000);
-   *esc = 1;
+      usleep(100000);
+   //*esc = 1;
    return NULL;
 }
 

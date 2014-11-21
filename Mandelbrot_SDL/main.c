@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
       end = clock();
       end = end-start;
       sprintf(str_time,"%f s.",end/(double)CLOCKS_PER_SEC);
-      //gfx_print(str_time,surface);
+      gfx_print(str_time,surface);
       gfx_present(surface);
    }
    

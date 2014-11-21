@@ -105,12 +105,23 @@ SURFACE *gfx_init(char *title, int width, int height) {
    SURFACE * image = malloc(sizeof(SURFACE));
    // HACK: software surfaces shouldn't require locking
    image->image = SDL_SetVideoMode(width, height, DEPTH, SDL_SWSURFACE);
+   image->font = SDL_LoadBMP("font.bmp");
    image->lock = INIT_SPINLOCK(&(image->lock),0);
+   
    if (image->image == NULL) {
       printf("Unable to initialize SDL video mode!\n");
       SDL_Quit();
       return NULL;
    }
+   
+   image->string = malloc(sizeof(char)* NB_ROW * NB_COL);
+   if(!image->string)
+   {
+      fprintf(stderr,"error allocating string memory for status\n");
+      exit(1);
+   }
+   for (int i = 0; i < NB_COL * NB_ROW ; i++)
+      image->string[i] = '\0';
    
    
    SDL_WM_SetCaption(title, 0);
@@ -149,6 +160,10 @@ bool gfx_is_esc_pressed() {
  * @param surface to present.
  */
 void gfx_present(SURFACE *surface) {
+   int pos = 0;
+   while (surface->string[pos] != '\0')
+      write_char_to_pos(surface->string[pos], pos, surface);
+   
    SDL_Flip(surface->image);
 }
 
@@ -189,7 +204,7 @@ void * thread_is_escaped(void * esc_pressed){
    return NULL;
 }
 
-/*
+
 void write_char_to_pos(char c, int pos, SURFACE * surface){
    SDL_Rect rect_source, rect_dest;
    if (c >= 'A' && c <='Z') {
@@ -225,9 +240,10 @@ void write_char_to_pos(char c, int pos, SURFACE * surface){
    rect_source.h = CHAR_PIX_H;
    rect_dest.h = CHAR_PIX_H * ZOOM;
    
-   SDL_RenderCopy(surface->ren, surface->text_layer, &rect_source, &rect_dest);
-}*/
-/*
+   SDL_BlitSurface(surface->font, &rect_source, surface->image, &rect_dest);
+}
+
+
 void gfx_print(char * string, SURFACE * surface){
    strcpy(surface->string, string);
-}*/
+}

@@ -15,9 +15,8 @@
 #include <SDL2/SDL.h>
 #include "spinlock.h"
 #define DEPTH 32
-// Size of the window
-//#define WIDTH  (5760)//1600//2880
-//#define HEIGHT (3600)//900//1800
+
+
 extern int WIDTH;
 extern int HEIGHT;
 

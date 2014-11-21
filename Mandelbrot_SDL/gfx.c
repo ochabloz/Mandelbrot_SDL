@@ -201,16 +201,21 @@ void * thread_render_present(void * surface){
    pthread_barrier_init(&time_bar,NULL,2);
    pthread_t t_time;
    pthread_create(&t_time,NULL,Thread_Time,(void*)&lock);
-   double *ticks;
+   double *ticks = malloc(sizeof(double));
+   *ticks = 0;
    char str[3000];
    pthread_barrier_wait(&time_bar);
    while (1) {
       usleep(40000);
+      *ticks += 0.04;
+      sprintf(str,"%lf s",*ticks);
+      gfx_print(str,surface);
       gfx_lock(s);
       gfx_present(s);
       gfx_unlock(s);
       if(trylock_spin(&lock) == 0)
       {
+         free(ticks);
          pthread_join(t_time,(void**)&ticks);
          sprintf(str,"%lf s",(*ticks));
          gfx_print(str,surface);

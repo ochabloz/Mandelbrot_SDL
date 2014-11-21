@@ -84,6 +84,11 @@ int main(int argc, char **argv) {
       {
          profile = atoi(&argv[argi][strlen("--profile=")]);
          profile -= 1;
+         if(profile > 5)
+         {
+            perror("profile doesnt exist");
+            return EXIT_FAILURE;
+         }
       }
    } // end of Argument processing
    
@@ -137,6 +142,7 @@ int main(int argc, char **argv) {
    }
    //sync with master thread to kill the workers
    pthread_barrier_wait(&bar);
+   pthread_barrier_destroy(&bar);
    if(pthread_join(t_master,NULL)!=0)
    {
       perror("error joining master thread");

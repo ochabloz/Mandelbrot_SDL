@@ -52,6 +52,7 @@ extern bool gfx_is_esc_pressed();
 extern void gfx_close();
 
 // Threaded functions
+void *Thread_Time (void *arg);
 void * thread_render_present(void * surface);
 void * thread_is_escaped(void * esc_pressed);
 // Text fonction

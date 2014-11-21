@@ -13,6 +13,7 @@
 #include <math.h>
 
 
+
 /**
  * Create the colormap.
  * This tool can be used to visualize gradients: http://angrytools.com/gradient/
@@ -96,6 +97,7 @@ void mandelbrot(SURFACE *surface, colormap_t *colmap, unsigned int width, unsign
       usleep(100000);  // Check every 0.1 sec. (10 Hz)
    }
 }
+extern pthread_barrier_t mandelbrot_bar;
 
 void *Mandelbrot(void *arg)
 {
@@ -182,6 +184,6 @@ void *Mandelbrot(void *arg)
          break;
       }
    }
-   pthread_barrier_wait(&bar_time);
+   pthread_barrier_wait(&mandelbrot_bar);
    return NULL;
 }

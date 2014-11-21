@@ -29,6 +29,8 @@ void *Thread_Master(void* arg);
 
 
 pthread_barrier_t bar;
+int nthread = 0;
+
 /**
  * Program's entry point.
  * @param argc number of arguments.
@@ -37,7 +39,6 @@ pthread_barrier_t bar;
  */
 int main(int argc, char **argv) {
 
-   int nthread = 0;
    int nbloc = 0;
    int profile = 0; // the cell of parametres array
    

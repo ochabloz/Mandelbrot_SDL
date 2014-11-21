@@ -25,7 +25,7 @@
 #define SPINLOCK_T pthread_spinlock_t
 #define lock_spin(x) pthread_spin_lock(x)
 #define unlock_spin(x) pthread_spin_unlock(x)
-#define trylock_spin(x) pthread_spin_trylock(
+#define trylock_spin(x) pthread_spin_trylock(x)
 #endif
 
 

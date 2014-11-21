@@ -8,6 +8,7 @@
 
 #include "gfx.h"
 #include <string.h>
+#include <time.h>
 
 #define NB_ROW 2
 #define NB_COL 20
@@ -30,7 +31,7 @@ int HEIGHT = 1080;
 static uint32 *pix_addr(SURFACE *surface, int x, int y) {
    return (uint32 *) surface->image->pixels + y * surface->image->pitch / (DEPTH / 8) + x;
 }
-
+extern int nthread;
 /**
  * Set pixel color at coordinates (x,y).
  * @param surface for which to draw the pixel.
@@ -161,12 +162,15 @@ bool gfx_is_esc_pressed() {
  */
 void gfx_present(SURFACE *surface) {
    int pos = 0;
+
    while (surface->string[pos] != '\0'){
       write_char_to_pos(surface->string[pos], pos, surface);
       pos++;
    }
    SDL_Flip(surface->image);
 }
+
+
 
 bool gfx_lock(SURFACE *surface){
    lock_spin(&(surface->lock));
@@ -186,17 +190,51 @@ void gfx_close(SURFACE * surface) {
    //free(surface);
 }
 
+pthread_barrier_t time_bar;
 void * thread_render_present(void * surface){
    SURFACE* s = surface;
+   SPINLOCK_T lock = INIT_SPINLOCK(0,0);
+   pthread_barrier_init(&time_bar,NULL,2);
+   pthread_t t_time;
+   pthread_create(&t_time,NULL,Thread_Time,(void*)&lock);
+   float *ticks;
+   char str[3000];
+   pthread_barrier_wait(&time_bar);
    while (1) {
-      usleep(40000);  // Check every 0.1 sec. (10 Hz)
+      usleep(40000);
       gfx_lock(s);
       gfx_present(s);
       gfx_unlock(s);
+      if(trylock_spin(&lock) == 0)
+      {
+         pthread_join(t_time,(void**)&ticks);
+         sprintf(str,"%f s",(*ticks));
+         gfx_print(str,surface);
+         gfx_present(surface);
+         printf("rendered in %s\n",str);
+         unlock_spin(&lock);
+         return NULL;
+      }
    }
    return NULL;
 }
 
+pthread_barrier_t mandelbrot_bar;
+void *Thread_Time (void *arg)
+{
+   SPINLOCK_T * lock = arg;
+   lock_spin(lock);
+   struct timespec start,end;
+   pthread_barrier_init(&mandelbrot_bar,NULL,nthread+1);
+   pthread_barrier_wait(&time_bar);
+   clock_gettime(CLOCK_MONOTONIC,&start);
+   pthread_barrier_wait(&mandelbrot_bar);
+   clock_gettime(CLOCK_MONOTONIC,&end);
+   start = end-start;
+   float res = (end.tv_nsec -start.tv_nsec)/10.0E9;
+   unlock_spin(lock);
+   return &res;
+}
 void * thread_is_escaped(void * esc_pressed){
    int * esc = (int*) esc_pressed;
    while (!gfx_is_esc_pressed())

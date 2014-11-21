@@ -31,8 +31,8 @@ typedef Uint8 uint8;
 typedef struct SURFACE SURFACE;
 
 struct SURFACE{
-   SDL_Surface * image, font;
-  // SDL_Texture * text_layer;
+   SDL_Surface * image;
+   struct SDL_Surface * font;
   // SDL_Window * window;
   // SDL_Renderer * ren;
    char * string;

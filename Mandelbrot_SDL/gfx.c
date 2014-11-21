@@ -161,9 +161,10 @@ bool gfx_is_esc_pressed() {
  */
 void gfx_present(SURFACE *surface) {
    int pos = 0;
-   while (surface->string[pos] != '\0')
+   while (surface->string[pos] != '\0'){
       write_char_to_pos(surface->string[pos], pos, surface);
-   
+      pos++;
+   }
    SDL_Flip(surface->image);
 }
 
@@ -199,8 +200,8 @@ void * thread_render_present(void * surface){
 void * thread_is_escaped(void * esc_pressed){
    int * esc = (int*) esc_pressed;
    while (!gfx_is_esc_pressed())
-      usleep(10000);
-   *esc = 1;
+      usleep(100000);
+   //*esc = 1;
    return NULL;
 }
 
@@ -239,7 +240,6 @@ void write_char_to_pos(char c, int pos, SURFACE * surface){
    rect_dest.w = CHAR_PIX_W * ZOOM;
    rect_source.h = CHAR_PIX_H;
    rect_dest.h = CHAR_PIX_H * ZOOM;
-   
    SDL_BlitSurface(surface->font, &rect_source, surface->image, &rect_dest);
 }
 

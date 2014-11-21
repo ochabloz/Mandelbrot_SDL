@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include <SDL/SDL.h>
 #include "spinlock.h"
 #define DEPTH 32
 
@@ -32,10 +32,10 @@ typedef struct SURFACE SURFACE;
 
 struct SURFACE{
    SDL_Surface * image;
-   SDL_Texture * text_layer;
-   SDL_Window * window;
-   SDL_Renderer * ren;
-   char * string;
+  // SDL_Texture * text_layer;
+  // SDL_Window * window;
+  // SDL_Renderer * ren;
+  // char * string;
    SPINLOCK_T lock;
 };
 

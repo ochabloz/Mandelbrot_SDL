@@ -1,5 +1,5 @@
 CC=gcc
-LIB=-lpthread -lm -lrt -lSDL2
+LIB=-lpthread -lm -lrt -lSDL
 CCFLAGS=-std=c99
 
 all: Mandelbrot

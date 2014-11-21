@@ -63,7 +63,7 @@ uint32 gfx_getpix(SURFACE *surface, int x, int y) {
  * @param width of the window.
  * @param height of the window.
  * @return pointer to the initialized surface or 0 if the call failed.
- */
+ *
 SURFACE *gfx_init(char *title, int width, int height) {
    SURFACE * image = malloc(sizeof(SURFACE));
    if(!image)
@@ -95,14 +95,35 @@ SURFACE *gfx_init(char *title, int width, int height) {
    image->lock = INIT_SPINLOCK(0,0);
    
    return image;
-}
+}*/
 
+SURFACE *gfx_init(char *title, int width, int height) {
+   if (SDL_Init(SDL_INIT_VIDEO) == -1) {
+      printf("Unable to initialize SDL!\n");
+      return NULL;
+   }
+   SURFACE * image = malloc(sizeof(SURFACE));
+   // HACK: software surfaces shouldn't require locking
+   image->image = SDL_SetVideoMode(width, height, DEPTH, SDL_SWSURFACE);
+   image->lock = INIT_SPINLOCK(&(image->lock),0);
+   if (image->image == NULL) {
+      printf("Unable to initialize SDL video mode!\n");
+      SDL_Quit();
+      return NULL;
+   }
+   
+   
+   SDL_WM_SetCaption(title, 0);
+   
+   return image;
+}
+/*
 SDL_Renderer * creer_fenetre(int x, int y, char * title, SDL_Window** pWindow){
    *pWindow = SDL_CreateWindow(title, 0, 0, x, y, SDL_WINDOW_SHOWN);
    if(pWindow)
       return SDL_CreateRenderer(*pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
    return NULL;
-}
+}*/
 
 /**
  * Check whether the ESC key was pressed or windows close button was clicked.
@@ -128,20 +149,7 @@ bool gfx_is_esc_pressed() {
  * @param surface to present.
  */
 void gfx_present(SURFACE *surface) {
-   int pos_str = 0;
-   SDL_Texture * tex = SDL_CreateTextureFromSurface(surface->ren, surface->image);
-   
-   SDL_RenderClear(surface->ren);
-   SDL_RenderCopy(surface->ren, tex, NULL, NULL);
-   SDL_DestroyTexture(tex);
-   
-   while (surface->string[pos_str] != '\0') {
-      write_char_to_pos(surface->string[pos_str], pos_str, surface);
-      pos_str++;
-   }
-   
-   // affiche le tout à l'image
-   SDL_RenderPresent(surface->ren);
+   SDL_Flip(surface->image);
 }
 
 bool gfx_lock(SURFACE *surface){
@@ -181,7 +189,7 @@ void * thread_is_escaped(void * esc_pressed){
    return NULL;
 }
 
-
+/*
 void write_char_to_pos(char c, int pos, SURFACE * surface){
    SDL_Rect rect_source, rect_dest;
    if (c >= 'A' && c <='Z') {
@@ -218,8 +226,8 @@ void write_char_to_pos(char c, int pos, SURFACE * surface){
    rect_dest.h = CHAR_PIX_H * ZOOM;
    
    SDL_RenderCopy(surface->ren, surface->text_layer, &rect_source, &rect_dest);
-}
-
+}*/
+/*
 void gfx_print(char * string, SURFACE * surface){
    strcpy(surface->string, string);
-}
+}*/

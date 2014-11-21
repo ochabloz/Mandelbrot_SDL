@@ -11,11 +11,11 @@
 
 #define NB_ROW 2
 #define NB_COL 20
-#define CHAR_PIX_W 7
-#define CHAR_PIX_H 9
-#define ZOOM 3
-#define F_PADDING 7
-#define F_PADD_X 1
+#define CHAR_PIX_W 14
+#define CHAR_PIX_H 18
+#define ZOOM 1
+#define F_PADDING 14
+#define F_PADD_X 2
 
 
 int WIDTH = 1920;

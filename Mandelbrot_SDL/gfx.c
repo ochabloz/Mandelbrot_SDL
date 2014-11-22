@@ -148,7 +148,6 @@ void gfx_unlock(SURFACE *surface){
  */
 void gfx_close(SURFACE * surface) {
    SDL_Quit();
-   //free(surface);
 }
 
 pthread_barrier_t time_bar;
